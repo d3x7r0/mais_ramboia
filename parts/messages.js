@@ -21,10 +21,16 @@ function chat(msg, usr) {
 }
 
 function init(params, usr) {
-    var entries = history.getAll(usr.getRoom());
+    var entries = history.getAll(usr.getRoom()),
+        pls = playlist.get(usr.getRoom());
 
     usr.message('chat', entries);
     usr.message('name', usr.name);
+
+    if (pls.length > 0) {
+        usr.message('playlist', pls);
+        usr.message('video', pls[0]);
+    }
 }
 
 module.exports = {

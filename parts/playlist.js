@@ -13,7 +13,9 @@ var storage = {},
 var TIMEOUT = 1000;
 
 function getPlaylist(room) {
-    return (storage[room.id] || []).slice(0);
+    storage[room.id] = storage[room.id] || [];
+
+    return storage[room.id].slice(0);
 }
 
 function parse(room, entry) {
@@ -24,8 +26,6 @@ function parse(room, entry) {
             providers[i].process(id, afterProcess(room, id));
         }
     }
-
-    console.log(storage[room.id]);
 }
 
 function afterProcess(room, id) {
@@ -35,13 +35,13 @@ function afterProcess(room, id) {
             return;
         }
 
-        var playlist = getPlaylist(room);
+        storage[room.id] = storage[room.id] || [];
 
-        playlist.push(data);
+        storage[room.id].push(data);
 
         notifyPlaylistChange(room);
 
-        if (playlist.length === 1) {
+        if (storage[room.id].length === 1) {
             // First video, start the clock!
             start(room);
         }
@@ -49,11 +49,14 @@ function afterProcess(room, id) {
 }
 
 function start(room) {
-    var playlist = getPlaylist(room);
+    var playlist = storage[room.id] || [];
 
     if (playlist.length > 0) {
         var video = playlist[0],
             time = TIMEOUT;
+
+        // Mark the start time of the video (for sync)
+        video.timestamp = +(new Date());
 
         notifyVideoChanged(room, video);
 
@@ -71,12 +74,12 @@ function start(room) {
 }
 
 function nextVideo(room) {
-    var playlist = getPlaylist(room);
+    var playlist = storage[room.id] || [];
 
     clearTimeout(timers[room.id]);
 
     if (playlist.length > 0) {
-        playlist.pop();
+        playlist.shift();
 
         notifyPlaylistChange(room);
 
@@ -85,14 +88,14 @@ function nextVideo(room) {
 }
 
 function notifyVideoChanged(room, video) {
-    room.messageMembers('video', {
-        timestamp: +new Date(),
-        video: video
-    });
+    console.log("Sending new video to room %s", room.name, video);
+    room.messageMembers('video', video);
 }
 
 function notifyPlaylistChange(room) {
-    room.messageMembers('playlist', storage[room.id]);
+    var playlist = storage[room.id];
+    console.log("Sending new playlist to room %s", room.name, playlist);
+    room.messageMembers('playlist', playlist);
 }
 
 module.exports = {

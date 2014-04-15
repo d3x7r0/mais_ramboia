@@ -41,6 +41,8 @@ define(function (require) {
 
     var cloak = require('cloak');
 
+    var player = require('parts/player');
+
     // constants
     var SETTINGS = {
         API: {
@@ -189,7 +191,7 @@ define(function (require) {
     }
 
     function _onVideoChange(video) {
-        console.log(video);
+        player.play(video.id, video.timestamp);
     }
 
     // Init
