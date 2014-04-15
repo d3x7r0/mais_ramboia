@@ -9,10 +9,11 @@ require.config({
         // Bower
         'promises': '../vendor/q/q',
         'underscore': '../vendor/underscore/underscore',
-        'domready': '../vendor/domready/ready.min',
-        'reqwest': '../vendor/reqwest/reqwest.min',
-        'bonzo': '../vendor/bonzo/bonzo.min',
-        'qwery': '../vendor/qwery/qwery.min'
+        'domready': '../vendor/domready/ready',
+        'reqwest': '../vendor/reqwest/reqwest',
+        'bonzo': '../vendor/bonzo/bonzo',
+        'qwery': '../vendor/qwery/qwery',
+        'bean': '../vendor/bean/bean'
     },
     shim: {
         'underscore': {
@@ -30,12 +31,11 @@ define(function (require) {
 
     // Requires
     var console = require('console'),
-        when = require('promises'),
+        when = require('promises');
+
+    var reqwest = require('reqwest'),
         _ = require('underscore'),
         $ = require('utils/dom');
-
-    var domready = require('domready'),
-        reqwest = require('reqwest');
 
     var cloak = require('cloak');
 
@@ -108,7 +108,7 @@ define(function (require) {
 
     function _enableForm() {
         _loaded.promise.then(function () {
-            _.forEach(_$form.querySelectorAll('[disabled]'), function ($el) {
+            _.forEach(_$form.find('[disabled]'), function ($el) {
                 $el.disabled = false;
             })
         });
@@ -118,7 +118,7 @@ define(function (require) {
         _loaded.promise.then(function () {
             _$input.disabled = true;
 
-            _.forEach(_$form.querySelectorAll('button'), function ($el) {
+            _.forEach(_$form.find('button'), function ($el) {
                 $el.disabled = true;
             })
         });
@@ -139,9 +139,9 @@ define(function (require) {
     }
 
     function _onDomLoaded() {
-        _$form = document.getElementById('chat-form');
-        _$input = document.querySelector('#chat-form input');
-        _$user = document.getElementById('chat-name');
+        _$form = $('#chat-form');
+        _$input = $('input', '#chat-form');
+        _$user = $('#chat-name');
 
         _$messages = $('.entries .inner', '#chat-container');
 
@@ -151,18 +151,18 @@ define(function (require) {
     }
 
     function _initListeners() {
-        _$form.addEventListener('submit', _onSubmit);
-        _$user.addEventListener('click', _onUserClick)
+        _$form.on('submit', _onSubmit);
+        _$user.on('click', _onUserClick)
     }
 
     function _onSubmit(e) {
         e.preventDefault();
 
-        var msg = _$input.value;
+        var msg = _$input.val();
 
         if (msg.length > 0) {
             cloak.message('chat', msg);
-            _$input.value = '';
+            _$input.val('');
         }
     }
 
@@ -178,8 +178,13 @@ define(function (require) {
         _currentUsername = name;
     }
 
-    _loadSettings().then(_setup);
-    domready(_onDomLoaded);
+    // Init
+    function init() {
+        _loadSettings().then(_setup);
+        $.ready(_onDomLoaded);
+    }
+
+    init();
 
     return {};
 });
