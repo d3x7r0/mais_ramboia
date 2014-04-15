@@ -1,0 +1,26 @@
+{
+  "name": "mais_ramboia",
+  "version": "0.0.1",
+  "authors": [
+    "Luis Nabais <dextro@gmail.com>"
+  ],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "modernizr": "~2.7.2",
+    "requirejs": "~2.1.11",
+    "underscore": "~1.6.0",
+    "domready": "~1.0.4",
+    "reqwest": "~1.1.0",
+    "q": "1.x",
+    "bonzo": "~2.0.0",
+    "qwery": "~4.0.0"
+  }
+}

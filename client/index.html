@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html class="no-js">
+<head lang="en">
+    <meta charset="UTF-8" />
+
+    <title>+Ramboia</title>
+
+    <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.4.2/pure-min.css" />
+    <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet" />
+
+    <link rel="stylesheet" href="css/style.css" />
+    <script src="vendor/modernizr/modernizr.js"></script>
+</head>
+<body>
+    <div class="pure-g" id="ramboia">
+        <section id="video-container" class="pure-u-3-4">
+            <p>Video here</p>
+        </section>
+        <section id="chat-container" class="pure-u-1-4">
+            <div class="entries">
+                <div class="inner">
+                </div>
+            </div>
+            <form class="pure-form" id="chat-form">
+                <button type="button" class="pure-button" name="chat-name" title="Change Username" id="chat-name" disabled><i class="fa fa-user"></i></button>
+                <input type="text" name="chat-input" placeholder="chat" disabled />
+                <button type="submit" class="pure-button pure-button-primary" disabled>Send</button>
+            </form>
+        </section>
+    </div>
+    <script src="vendor/requirejs/require.js" data-main="js/main"></script>
+</body>
+</html>

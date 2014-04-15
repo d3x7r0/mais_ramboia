@@ -1,0 +1,84 @@
+* {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+html, body {
+  background: #000;
+  color: darken(#fff, 25%);
+}
+
+html, body, #ramboia {
+  width: 100%;
+  height: 100%;
+}
+
+#video-container,
+#chat-container {
+  height: 100%;
+}
+
+#chat-container {
+  @buttonWidth: 70px;
+  @buttonMargin: 5px;
+  @userWidth: 45px;
+  @fadeHeight: 8px;
+
+  position: relative;
+
+  .entries {
+    width: 100%;
+    height: 100%;
+    padding-bottom: (38px + @fadeHeight);
+
+    & > .inner {
+      overflow: auto;
+      max-height: 100%;
+    }
+  }
+
+  form {
+    position: absolute;
+    bottom: 2px;
+    left: 0;
+    background: #000;
+    width: 100%;
+    padding-right: @buttonWidth + (@buttonMargin * 2);
+    padding-left: @userWidth + (@buttonMargin * 2);
+
+    &:before {
+      content: ' ';
+      position: absolute;
+      top: -(2 * @fadeHeight);
+      left: 0;
+      right: 0;
+      height: @fadeHeight;
+
+      background: -moz-linear-gradient(top, rgba(255,255,255,0) 0%, rgba(0,0,0,1) 100%); /* FF3.6+ */
+      background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(255,255,255,0)), color-stop(100%,rgba(0,0,0,1))); /* Chrome,Safari4+ */
+      background: -webkit-linear-gradient(top, rgba(255,255,255,0) 0%,rgba(0,0,0,1) 100%); /* Chrome10+,Safari5.1+ */
+      background: -o-linear-gradient(top, rgba(255,255,255,0) 0%,rgba(0,0,0,1) 100%); /* Opera 11.10+ */
+      background: -ms-linear-gradient(top, rgba(255,255,255,0) 0%,rgba(0,0,0,1) 100%); /* IE10+ */
+      background: linear-gradient(to bottom, rgba(255,255,255,0) 0%,rgba(0,0,0,1) 100%); /* W3C */
+    }
+
+    input {
+      width: 100%;
+    }
+
+    button[type=submit] {
+      position: absolute;
+      top: 0;
+      right: @buttonMargin;
+      width: @buttonWidth;
+    }
+
+    button[name=chat-name] {
+      position: absolute;
+      top: 0;
+      left: @buttonMargin;
+      width: @userWidth;
+    }
+  }
+}
