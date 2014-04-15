@@ -6,11 +6,11 @@ var SETTINGS = require('../config');
 var Storage = {};
 
 function getAll(room) {
-    return (Storage[room] || []).slice(0);
+    return (Storage[room.id] || []).slice(0);
 }
 
 function store(room, usr, msg, date) {
-    Storage[room] = Storage[room] || [];
+    Storage[room.id] = Storage[room.id] || [];
 
     var data = {
         date: date || new Date(),
@@ -21,10 +21,10 @@ function store(room, usr, msg, date) {
         msg: msg
     };
 
-    Storage[room].unshift(data);
+    Storage[room.id].unshift(data);
 
-    if (Storage[room].length > SETTINGS.MAX_ENTRIES) {
-        Storage[room].length = SETTINGS.MAX_ENTRIES
+    if (Storage[room.id].length > SETTINGS.MAX_ENTRIES) {
+        Storage[room.id].length = SETTINGS.MAX_ENTRIES
     }
 
     return data;

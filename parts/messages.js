@@ -1,6 +1,7 @@
 /* jshint node:true */
 
-var history = require('./history');
+var history = require('./history'),
+    playlist = require('./playlist');
 
 function name(name, usr) {
     if (name && name.length > 1) {
@@ -11,9 +12,12 @@ function name(name, usr) {
 }
 
 function chat(msg, usr) {
-    var entry = history.store(usr.getRoom(), usr, msg);
+    var room = usr.getRoom(),
+        entry = history.store(room, usr, msg);
 
-    usr.getRoom().messageMembers('chat', [ entry ]);
+    playlist.parse(room, entry);
+
+    room.messageMembers('chat', [ entry ]);
 }
 
 function init(params, usr) {

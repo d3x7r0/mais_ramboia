@@ -88,7 +88,9 @@ define(function (require) {
             },
             messages: {
                 chat: _onChat,
-                name: _onNameChange
+                name: _onNameChange,
+                playlist: _onPlaylistChange,
+                video: _onVideoChange
             }
         });
 
@@ -180,6 +182,14 @@ define(function (require) {
 
     function _onNameChange(name) {
         _currentUsername = name;
+    }
+
+    function _onPlaylistChange(playlist) {
+        console.log(playlist);
+    }
+
+    function _onVideoChange(video) {
+        console.log(video);
     }
 
     // Init
