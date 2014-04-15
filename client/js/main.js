@@ -4,7 +4,7 @@ require.config({
         // Utils
         'console': 'utils/console',
         // Libs
-        'socket.io': 'libs/socket.io',
+        'socket.io': '/socket.io/socket.io',
         'cloak': 'libs/cloak-client',
         // Bower
         'promises': '../vendor/q/q',
