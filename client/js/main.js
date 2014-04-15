@@ -3,8 +3,10 @@ require.config({
     paths: {
         // Utils
         'console': 'utils/console',
-        // Libs
+        'dom': 'utils/dom',
+        // Socket.IO
         'socket.io': '/socket.io/socket.io',
+        // Libs
         'cloak': 'libs/cloak-client',
         // Bower
         'promises': '../vendor/q/q',
@@ -35,7 +37,7 @@ define(function (require) {
 
     var reqwest = require('reqwest'),
         _ = require('underscore'),
-        $ = require('utils/dom');
+        $ = require('dom');
 
     var cloak = require('cloak');
 
