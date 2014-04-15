@@ -52,7 +52,7 @@ define(function (require) {
         // Augment Bonzo
         addEventHandling();
         bonzo.aug({
-            find: function(selector) {
+            find: function find(selector) {
                 var arr = [];
 
                 for (var i = 0; i < this.length; i++) {
@@ -69,10 +69,16 @@ define(function (require) {
         return bonzo(qwery(selector, context));
     }
 
-    dom.bonzo = bonzo;
-    dom.qwery = qwery;
-    dom.bean = bean;
+    dom._bonzo = bonzo;
+    dom._qwery = qwery;
+    dom._bean = bean;
+
+    // Expose static methods
     dom.ready = domready;
+
+    dom.doc = bonzo.doc;
+    dom.viewport = bonzo.viewport;
+    dom.create = bonzo.create;
 
     return dom;
 });

@@ -126,16 +126,18 @@ define(function (require) {
 
     function _onChat(entries) {
         _loaded.promise.then(function () {
-            var $elements = _.map(entries, _printMessage);
+            var $elements = _.chain(entries)
+                .map(_printMessage)
+                .flatten()
+                .compact()
+                .value();
 
             _$messages.prepend($elements);
         });
     }
 
     function _printMessage(entry) {
-        var msg = document.createElement('p');
-        msg.innerText = entry.usr.name + ': ' + entry.msg;
-        return msg;
+        return $.create('<p>' + entry.usr.name + ': ' + entry.msg + '</p>');
     }
 
     function _onDomLoaded() {
