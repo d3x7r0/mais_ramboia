@@ -30,7 +30,7 @@ html, body, #ramboia {
   .entries {
     width: 100%;
     height: 100%;
-    padding-bottom: (38px + @fadeHeight);
+    padding: 15px 15px (38px + @fadeHeight);
 
     & > .inner {
       overflow: auto;
@@ -79,6 +79,73 @@ html, body, #ramboia {
       top: 0;
       left: @buttonMargin;
       width: @userWidth;
+    }
+  }
+}
+
+#video-container {
+  .player-outer {
+    position: relative;
+    padding-bottom: 56.25%;
+    height: 0;
+    overflow: hidden;
+
+    iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+  }
+
+  .playlist {
+    height: 100%;
+    width: 100%;
+    padding-top: 56.25%;
+    margin-top: -56.25%;
+    overflow: hidden;
+
+    ul {
+      display: block;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      height: 100%;
+      width: 200%;
+      overflow: hidde;
+    }
+
+    li {
+      position: relative;
+      display: inline-block;
+      height: 100%;
+      margin: 0 15px;
+      padding: 0;
+      opacity: 0.5;
+
+      img {
+        height: 100%;
+      }
+
+      &:first-child {
+        // Now playing
+        opacity: 1;
+
+        &:after {
+          content: '\f04b';
+          display: inline-block;
+          font-family: 'FontAwesome';
+          font-style: normal;
+          font-weight: normal;
+          line-height: 1;
+          -webkit-font-smoothing: antialiased;
+          -moz-osx-font-smoothing: antialiased;
+          position: absolute;
+          right: 5%;
+          bottom: 15%;
+        }
+      }
     }
   }
 }

@@ -12,6 +12,15 @@ define(function (require) {
         WIDTH = '640',
         HEIGHT = '390';
 
+    var PLAYER_SETTINGS = {
+        controls: 0,
+        disablekb: 1,
+        iv_load_policy: 3,
+        modestbranding: 1,
+        rel: 0,
+        showinfo: 0
+    };
+
     // Variables
     var _loaded = when.defer();
 
@@ -36,20 +45,22 @@ define(function (require) {
 
         function start() {
             _player.playVideo();
-            if (startTime) {
-                listener = bean.on(_player, 'statechanged', correct);
-            }
-            deferred.resolve();
+
+            listener = bean.on(_player, 'statechanged', correct);
         }
 
         function correct(e) {
             if (e.data === YT.PlayerState.PLAYING) {
                 bean.off(_player, 'statechanged', correct);
 
-                var delta = Math.round((+(new Date()) - startTime) / 1000);
+                if (startTime) {
+                    var delta = Math.round((+(new Date()) - startTime) / 1000);
 
-                _player.seekTo(delta, true);
-            };
+                    _player.seekTo(delta, true);
+                }
+
+                deferred.resolve();
+            }
         }
 
         _loaded.promise.then(function () {
@@ -76,6 +87,7 @@ define(function (require) {
             height: HEIGHT,
             width: WIDTH,
             videoId: videoId,
+            playerVars: PLAYER_SETTINGS,
             events: {
                 'onReady': function onPlayerReady() {
                     deferred.resolve(_player);

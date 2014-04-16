@@ -59,7 +59,8 @@ define(function (require) {
     var _$form,
         _$user,
         _$input,
-        _$messages;
+        _$messages,
+        _$playlist;
 
     function _loadSettings() {
         var deferred = when.defer();
@@ -152,6 +153,7 @@ define(function (require) {
         _$user = $('#chat-name');
 
         _$messages = $('.entries .inner', '#chat-container');
+        _$playlist = $('.playlist ul', '#video-container');
 
         _initListeners();
 
@@ -186,12 +188,24 @@ define(function (require) {
         _currentUsername = name;
     }
 
-    function _onPlaylistChange(playlist) {
-        console.log(playlist);
-    }
-
     function _onVideoChange(video) {
         player.play(video.id, video.timestamp);
+    }
+
+    function _onPlaylistChange(playlist) {
+        _loaded.promise.then(function() {
+            var $elements = _.chain(playlist)
+                .map(_renderPlaylistEntry)
+                .flatten()
+                .compact()
+                .value();
+
+            _$playlist.html($elements);
+        });
+    }
+
+    function _renderPlaylistEntry(entry) {
+        return $.create('<li><img src="' + entry.thumb + '" /></li>');
     }
 
     // Init
