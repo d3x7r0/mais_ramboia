@@ -68,9 +68,12 @@ define(function (require) {
     // DOM elements
     var _$form,
         _$user,
-        _$input,
-        _$messages,
+        _$input;
+
+    var _$messages,
         _$playlist;
+
+    var _$mute;
 
     function _loadSettings() {
         var deferred = when.defer();
@@ -126,31 +129,29 @@ define(function (require) {
 
     function _enableForm() {
         _loaded.promise.then(function () {
-            _.forEach(_$form.find('[disabled]'), function ($el) {
-                $el.disabled = false;
-            })
+            _.forEach($('input, button'), function (el) {
+                $(el).removeAttr('disabled');
+            });
+        });
+    }
+
+    function _disableForm() {
+        _loaded.promise.then(function () {
+            _.forEach($('input, button'), function (el) {
+                $(el).attr('disabled', 'disabled');
+            });
         });
     }
 
     var _initTemplates = function () {
         for (var k in TEMPLATES) {
-            if (!TEMPLATES.hasOwnProperty(k)){
+            if (!TEMPLATES.hasOwnProperty(k)) {
                 continue;
             }
 
             TEMPLATES[k] = _.template(TEMPLATES[k]);
         }
     };
-
-    function _disableForm() {
-        _loaded.promise.then(function () {
-            _$input.disabled = true;
-
-            _.forEach(_$form.find('button'), function ($el) {
-                $el.disabled = true;
-            })
-        });
-    }
 
     function _onChat(entries) {
         _loaded.promise.then(function () {
@@ -178,6 +179,8 @@ define(function (require) {
         _$messages = $('.entries .inner', '#chat-container');
         _$playlist = $('.playlist ul', '#video-container');
 
+        _$mute = $('#mute');
+
         _initListeners();
 
         _loaded.resolve();
@@ -185,7 +188,9 @@ define(function (require) {
 
     function _initListeners() {
         _$form.on('submit', _onSubmit);
-        _$user.on('click', _onUserClick)
+        _$user.on('click', _onUserClick);
+
+        _$mute.on('click', _onMuteToggle);
     }
 
     function _onSubmit(e) {
@@ -199,12 +204,35 @@ define(function (require) {
         }
     }
 
-    function _onUserClick(e) {
+    function _onUserClick() {
         var newUsername = prompt("Username", _currentUsername);
 
         if (newUsername && newUsername.length > 1) {
             cloak.message('name', newUsername);
         }
+    }
+
+    function _onMuteToggle() {
+        player.toggleMute().then(function (muted) {
+            var _$icon = $(_$mute.find('i')),
+                _$label = $(_$mute.find('span'));
+
+            if (muted) {
+                _$label.text('Unmute');
+
+                _$icon.removeClass('fa-volume-up');
+                _$icon.addClass('fa-volume-off');
+
+                _$mute.addClass('pure-button-active');
+            } else {
+                _$label.text('Mute');
+
+                _$icon.addClass('fa-volume-up');
+                _$icon.removeClass('fa-volume-off');
+
+                _$mute.removeClass('pure-button-active');
+            }
+        });
     }
 
     function _onNameChange(name) {

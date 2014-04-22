@@ -123,9 +123,28 @@ define(function (require) {
         });
     }
 
+    function toggleMute() {
+        var deferred = when.defer();
+
+        _loaded.promise.then(function() {
+            var muted = _player.isMuted();
+
+            if (muted) {
+                _player.unMute();
+            } else {
+                _player.mute();
+            }
+
+            deferred.resolve(!muted);
+        });
+
+        return deferred.promise;
+    }
+
     return {
         play: play,
         on: on,
-        off: off
+        off: off,
+        toggleMute: toggleMute
     };
 });

@@ -90,6 +90,8 @@ html, body, #ramboia {
 }
 
 #video-container {
+  position: relative;
+
   .player-outer {
     position: relative;
     padding-bottom: 56.25%;
@@ -109,6 +111,7 @@ html, body, #ramboia {
     position: relative;
     height: 100%;
     width: 100%;
+    padding-bottom: 2.6em;
     padding-top: 56.25%;
     margin-top: -56.25%;
     overflow: hidden;
@@ -177,6 +180,7 @@ html, body, #ramboia {
           padding: 0.5em 0.7em;
           border-radius: 0.4em 0 0 0;
           background: fade(#fff, 20%);
+          color: fade(#000, 75%);
         }
       }
 
@@ -204,6 +208,29 @@ html, body, #ramboia {
 
       &:hover header {
         opacity: 1;
+      }
+    }
+  }
+
+  nav {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 2.6em;
+    overflow: hidden;
+
+    ul {
+      margin: 0;
+      padding: 5px 15px;
+      list-style: none;
+
+      li {
+        display: inline;
+      }
+
+      button {
+        font-size: 80%
       }
     }
   }
