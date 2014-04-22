@@ -23,7 +23,8 @@ function parse(room, entry) {
         var id = providers[i].parse(entry.msg);
 
         if (id) {
-            var next = (storage[room.id] || [])[0];
+            var next = storage[room.id] || [];
+            next = next[0] || {};
 
             if (next.id != id) {
                 providers[i].process(id, afterProcess(room, id));
