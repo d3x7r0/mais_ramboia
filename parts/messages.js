@@ -7,7 +7,7 @@ var fs = require('fs');
 
 var NAMES = [];
 
-fs.readFile(__dirname + '/../resources/names.txt', { encoding : 'utf-8' }, function (err, data) {
+fs.readFile(__dirname + '/../resources/names.txt', { encoding: 'utf-8' }, function (err, data) {
     "use strict";
     if (err) {
         console.warn("Error loading list of random names", err);
@@ -41,19 +41,23 @@ function init(params, usr) {
 
     usr.name = params.name || _getRandomUsername();
 
-    usr.message('chat', entries);
-    usr.message('name', usr.name);
+    var data = {
+        chat: entries,
+        name: usr.name
+    };
 
     if (pls.length > 0) {
-        usr.message('playlist', pls);
-        usr.message('video', pls[0]);
+        data.playlist = pls;
+        data.video = pls[0];
     }
+
+    usr.message('init', data);
 }
 
 function _getRandomUsername() {
     "use strict";
 
-    return NAMES[Math.random()*NAMES.length | 0] || 'Nameless User';
+    return NAMES[Math.random() * NAMES.length | 0] || 'Nameless User';
 }
 
 module.exports = {

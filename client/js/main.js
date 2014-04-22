@@ -103,6 +103,7 @@ define(function (require) {
                 disconnect: _onDisconnect
             },
             messages: {
+                init: _onInit,
                 chat: _onChat,
                 name: _onNameChange,
                 playlist: _onPlaylistChange,
@@ -115,8 +116,21 @@ define(function (require) {
 
     function _onBegin() {
         cloak.message('init');
-        _enableForm();
         _initTemplates();
+    }
+
+    function _onInit(data) {
+        data = data || {};
+
+        _onChat(data.chat);
+        _onNameChange(data.name);
+
+        if (data.playlist) {
+            _onPlaylistChange(data.playlist);
+            _onVideoChange(data.video);
+        }
+
+        _enableForm();
     }
 
     function _onResume() {
