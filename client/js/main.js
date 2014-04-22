@@ -50,6 +50,16 @@ define(function (require) {
         }
     };
 
+    var TEMPLATES = {
+        CHAT: '<p><span class="username"><%- it.usr.name %></span>: <%- it.msg %></p>',
+        ENTRY: '<li title="<%- it.title %>">' +
+            '<img src="<%- it.thumb %>" />' +
+            '<header>' +
+            '<p><%- it.title %></p>' +
+            '</header>' +
+            '</li>'
+    };
+
     // variables
     var _loaded = when.defer();
 
@@ -103,6 +113,7 @@ define(function (require) {
     function _onBegin() {
         cloak.message('init');
         _enableForm();
+        _initTemplates();
     }
 
     function _onResume() {
@@ -120,6 +131,16 @@ define(function (require) {
             })
         });
     }
+
+    var _initTemplates = function () {
+        for (var k in TEMPLATES) {
+            if (!TEMPLATES.hasOwnProperty(k)){
+                continue;
+            }
+
+            TEMPLATES[k] = _.template(TEMPLATES[k]);
+        }
+    };
 
     function _disableForm() {
         _loaded.promise.then(function () {
@@ -144,17 +165,10 @@ define(function (require) {
     }
 
     function _printMessage(entry) {
-        return $.create('<p>' + escapeHtml(entry.usr.name) + ': ' + escapeHtml(entry.msg) + '</p>');
+        return $.create(TEMPLATES.CHAT({
+            it: entry
+        }));
     }
-
-    function escapeHtml(unsafe) {
-        return (unsafe || "")
-             .replace(/&/g, "&amp;")
-             .replace(/</g, "&lt;")
-             .replace(/>/g, "&gt;")
-             .replace(/"/g, "&quot;")
-             .replace(/'/g, "&#039;");
-     }
 
     function _onDomLoaded() {
         _$form = $('#chat-form');
@@ -202,7 +216,7 @@ define(function (require) {
     }
 
     function _onPlaylistChange(playlist) {
-        _loaded.promise.then(function() {
+        _loaded.promise.then(function () {
             var $elements = _.chain(playlist)
                 .map(_renderPlaylistEntry)
                 .flatten()
@@ -214,7 +228,11 @@ define(function (require) {
     }
 
     function _renderPlaylistEntry(entry) {
-        return $.create('<li><img src="' + entry.thumb + '" /></li>');
+        return $.create(
+            TEMPLATES.ENTRY({
+                it: entry
+            })
+        );
     }
 
     // Init
