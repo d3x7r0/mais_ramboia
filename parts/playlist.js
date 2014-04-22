@@ -27,13 +27,13 @@ function parse(room, entry) {
             next = next[0] || {};
 
             if (next.id != id) {
-                providers[i].process(id, afterProcess(room, id));
+                providers[i].process(id, afterProcess(room));
             }
         }
     }
 }
 
-function afterProcess(room, id) {
+function afterProcess(room) {
     return function (err, data) {
         if (err) {
             console.log("Error processing video with id %s", id, err);
