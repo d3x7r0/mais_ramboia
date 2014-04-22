@@ -10,7 +10,7 @@ var providers = [
 var storage = {},
     timers = {};
 
-var TIMEOUT = 1000;
+var TIMEOUT = 2 * 60 * 1000;
 
 function getPlaylist(room) {
     storage[room.id] = storage[room.id] || [];
@@ -23,7 +23,11 @@ function parse(room, entry) {
         var id = providers[i].parse(entry.msg);
 
         if (id) {
-            providers[i].process(id, afterProcess(room, id));
+            var next = (storage[room.id] || [])[0];
+
+            if (next.id != id) {
+                providers[i].process(id, afterProcess(room, id));
+            }
         }
     }
 }
