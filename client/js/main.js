@@ -144,8 +144,17 @@ define(function (require) {
     }
 
     function _printMessage(entry) {
-        return $.create('<p>' + entry.usr.name + ': ' + entry.msg + '</p>');
+        return $.create('<p>' + escapeHtml(entry.usr.name) + ': ' + escapeHtml(entry.msg) + '</p>');
     }
+
+    function escapeHtml(unsafe) {
+        return (unsafe || "")
+             .replace(/&/g, "&amp;")
+             .replace(/</g, "&lt;")
+             .replace(/>/g, "&gt;")
+             .replace(/"/g, "&quot;")
+             .replace(/'/g, "&#039;");
+     }
 
     function _onDomLoaded() {
         _$form = $('#chat-form');
