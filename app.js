@@ -45,7 +45,8 @@ var server = app.listen(SETTINGS.PORT, function () {
 cloak.configure({
     express: server,
     messages: require('./parts/messages'),
-    room: require('./parts/room')
+    room: require('./parts/room'),
+    lobby: require('./parts/room')
 });
 
 cloak.run();

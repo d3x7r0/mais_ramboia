@@ -51,6 +51,8 @@ function init(params, usr) {
     }
 
     usr.message('init', data);
+
+    history.send(usr.getRoom(), usr, 'has joined the room', true);
 }
 
 function _getRandomUsername() {
