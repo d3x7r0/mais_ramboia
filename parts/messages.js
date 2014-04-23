@@ -60,8 +60,15 @@ function _getRandomUsername() {
     return NAMES[Math.random() * NAMES.length | 0] || 'Nameless User';
 }
 
+function skip(params, usr) {
+    playlist.voteToSkip(usr.getRoom(), usr, function(err) {
+        usr.message('skip', err);
+    });
+}
+
 module.exports = {
     init: init,
     chat: chat,
-    name: name
+    name: name,
+    skip: skip
 };

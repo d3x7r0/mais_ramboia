@@ -13,9 +13,13 @@ var storage = {},
 var TIMEOUT = 2 * 60 * 1000;
 
 function getPlaylist(room) {
+    return _getPlaylist(room).slice(0);
+}
+
+function _getPlaylist(room) {
     storage[room.id] = storage[room.id] || [];
 
-    return storage[room.id].slice(0);
+    return storage[room.id];
 }
 
 function parse(room, entry) {
@@ -23,30 +27,32 @@ function parse(room, entry) {
         var id = providers[i].parse(entry.msg);
 
         if (id) {
-            var next = storage[room.id] || [];
+            var next = _getPlaylist(room);
             next = next[0] || {};
 
             if (next.id != id) {
-                providers[i].process(id, afterProcess(room));
+                providers[i].process(id, afterProcess(room, entry));
             }
         }
     }
 }
 
-function afterProcess(room) {
+function afterProcess(room, entry) {
     return function (err, data) {
         if (err) {
             console.log("Error processing video with id %s", id, err);
             return;
         }
 
-        storage[room.id] = storage[room.id] || [];
+        var playlist = _getPlaylist(room);
 
-        storage[room.id].push(data);
+        data.user = entry.usr.name;
+
+        playlist.push(data);
 
         notifyPlaylistChange(room);
 
-        if (storage[room.id].length === 1) {
+        if (playlist.length === 1) {
             // First video, start the clock!
             start(room);
         }
@@ -54,7 +60,7 @@ function afterProcess(room) {
 }
 
 function start(room) {
-    var playlist = storage[room.id] || [];
+    var playlist = _getPlaylist(room);
 
     if (playlist.length > 0) {
         var video = playlist[0],
@@ -79,17 +85,20 @@ function start(room) {
 }
 
 function nextVideo(room) {
-    var playlist = storage[room.id] || [];
+    var playlist = _getPlaylist(room);
 
     clearTimeout(timers[room.id]);
+
+    // Reset votes
+    _getVotes(room).length = 0;
 
     if (playlist.length > 0) {
         playlist.shift();
 
-        notifyPlaylistChange(room);
-
         start(room);
     }
+
+    notifyPlaylistChange(room);
 }
 
 function notifyVideoChanged(room, video) {
@@ -98,12 +107,76 @@ function notifyVideoChanged(room, video) {
 }
 
 function notifyPlaylistChange(room) {
-    var playlist = storage[room.id];
+    var playlist = _getPlaylist(room);
     console.log("Sending new playlist to room %s", room.name, playlist);
     room.messageMembers('playlist', playlist);
 }
 
+var _votes = {};
+
+function _getVotes(room) {
+    _votes[room.id] = _votes[room.id] || [];
+
+    return _votes[room.id];
+}
+
+function voteToSkip(room, usr, cb) {
+    var userIP = _getUserIP(usr),
+        votes = _getVotes(room);
+
+    if (votes.indexOf(userIP) === -1) {
+        votes.push(userIP);
+
+        console.log("User \"%s\" voted to skip video", usr.name);
+
+        cb();
+
+        recalculateVotes(room, usr);
+    } else {
+        cb("DUPLICATE_VOTE");
+    }
+}
+
+function recalculateVotes(room, usr) {
+    var ips = _getUsersIP(room),
+        votes = _getVotes(room);
+
+    votes = votes.filter(function (ip) {
+        return ips.indexOf(ip) !== -1;
+    });
+
+    if (votes.length + 1 >= (ips.length / 2)) {
+        console.log("Video will be skipped by majority vote");
+        nextVideo(room);
+    }
+}
+
+function _getUsersIP(room) {
+    var ips = {},
+        users = room.getMembers();
+
+    for (var i = 0; i < users.length; i++) {
+        var user = users[i],
+            ip = _getUserIP(user);
+
+        if (ip) {
+            ips[ip] = ips[ip] || [];
+            ips[ip].push(user);
+        }
+    }
+
+    return Object.keys(ips);
+}
+
+function _getUserIP(usr) {
+    var socket = usr._socket || {};
+
+    return socket.handshake && socket.handshake.address && socket.handshake.address.address;
+}
+
 module.exports = {
     get: getPlaylist,
-    parse: parse
+    parse: parse,
+    voteToSkip: voteToSkip,
+    recalculateVotes: recalculateVotes
 };

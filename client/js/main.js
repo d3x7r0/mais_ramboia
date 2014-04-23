@@ -52,7 +52,7 @@ define(function (require) {
 
     var TEMPLATES = {
         CHAT: '<p><span class="username"><%- it.usr.name %></span>: <%- it.msg %></p>',
-        ENTRY: '<li title="<%- it.title %>">' +
+        ENTRY: '<li title="<%- it.title %> (Requested by <%- it.user %>)">' +
             '<img src="<%- it.thumb %>" />' +
             '<header>' +
             '<p><%- it.title %></p>' +
@@ -73,7 +73,8 @@ define(function (require) {
     var _$messages,
         _$playlist;
 
-    var _$mute;
+    var _$mute,
+        _$skip;
 
     function _loadSettings() {
         var deferred = when.defer();
@@ -107,7 +108,8 @@ define(function (require) {
                 chat: _onChat,
                 name: _onNameChange,
                 playlist: _onPlaylistChange,
-                video: _onVideoChange
+                video: _onVideoChange,
+                skip: _onSkipResponse
             }
         });
 
@@ -194,6 +196,7 @@ define(function (require) {
         _$playlist = $('.playlist ul', '#video-container');
 
         _$mute = $('#mute');
+        _$skip = $('#skip');
 
         _initListeners();
 
@@ -205,6 +208,7 @@ define(function (require) {
         _$user.on('click', _onUserClick);
 
         _$mute.on('click', _onMuteToggle);
+        _$skip.on('click', _onSkipClick);
     }
 
     function _onSubmit(e) {
@@ -249,12 +253,31 @@ define(function (require) {
         });
     }
 
+    function _onSkipClick() {
+        _$skip.attr('disabled', true);
+
+        cloak.message('skip');
+    }
+
+    function _onSkipResponse(error) {
+        if (error && error != 'DUPLICATE_VOTE') {
+            _$skip.attr('disabled', false);
+        }
+    }
+
     function _onNameChange(name) {
         _currentUsername = name;
     }
 
     function _onVideoChange(video) {
-        player.play(video.id, video.timestamp);
+        video = video || {};
+
+        if (!video.id) {
+            player.stop();
+        } else {
+            player.play(video.id, video.timestamp);
+            _$skip.attr('disabled', false);
+        }
     }
 
     function _onPlaylistChange(playlist) {

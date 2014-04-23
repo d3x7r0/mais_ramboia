@@ -103,6 +103,12 @@ define(function (require) {
         bean.fire(_player, 'statechanged', event);
     }
 
+    function stop() {
+        _loaded.promise.then(function () {
+            _player.stopVideo();
+        })
+    }
+
     function on() {
         _loaded.promise.then(function () {
             var args = Array.prototype.slice.call(arguments, 0);
@@ -143,6 +149,7 @@ define(function (require) {
 
     return {
         play: play,
+        stop: stop,
         on: on,
         off: off,
         toggleMute: toggleMute
