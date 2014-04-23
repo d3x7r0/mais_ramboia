@@ -39,7 +39,7 @@ function parse(room, entry) {
 
 function afterProcess(room, entry) {
     return function (err, data) {
-        if (err) {
+        if (err || !data) {
             console.log("Error processing video with id %s", id, err);
             return;
         }
