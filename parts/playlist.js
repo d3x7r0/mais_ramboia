@@ -152,7 +152,7 @@ function recalculateVotes(room, usr) {
         return ips.indexOf(ip) !== -1;
     });
 
-    if (votes.length + 1 >= (ips.length / 2)) {
+    if (votes.length > 0 && votes.length + 1 >= (ips.length / 2)) {
         console.log("Video will be skipped by majority vote");
         nextVideo(room);
     }
