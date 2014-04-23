@@ -27,7 +27,7 @@ function name(name, usr) {
 function chat(msg, usr) {
     var room = usr.getRoom();
 
-    var entry = _sendChat(room, usr, msg);
+    var entry = history.send(room, usr, msg);
 
     playlist.parse(room, entry);
 }
@@ -65,16 +65,8 @@ function skip(params, usr) {
     playlist.voteToSkip(room, usr, function (err) {
         usr.message('skip', err);
 
-        _sendChat(room, usr, 'voted to skip', true);
+        history.send(room, usr, 'voted to skip', true);
     });
-}
-
-function _sendChat(room, usr, msg, system) {
-    var entry = history.store(room, usr, msg, system);
-
-    room.messageMembers('chat', [ entry ]);
-
-    return entry;
 }
 
 module.exports = {

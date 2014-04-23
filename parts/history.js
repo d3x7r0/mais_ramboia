@@ -31,7 +31,16 @@ function store(room, usr, msg, system) {
     return data;
 }
 
+function send(room, usr, msg, system) {
+    var entry = store(room, usr, msg, system);
+
+    room.messageMembers('chat', [ entry ]);
+
+    return entry;
+}
+
 module.exports = {
     getAll: getAll,
-    store: store
+    store: store,
+    send: send
 };
