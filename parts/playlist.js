@@ -81,6 +81,8 @@ function start(room) {
         // Start the timer for the next video
         // TODO LN: replace timeouts with a loop that checks every X ms (to reduce sync errors)
         timers[room.id] = setTimeout(nextVideo, time, room);
+    } else {
+        notifyVideoChanged(room, {});
     }
 }
 
@@ -121,6 +123,11 @@ function _getVotes(room) {
 }
 
 function voteToSkip(room, usr, cb) {
+    if (_getPlaylist(room).length === 0) {
+        cb("NO_VIDEO");
+        return;
+    }
+
     var userIP = _getUserIP(usr),
         votes = _getVotes(room);
 

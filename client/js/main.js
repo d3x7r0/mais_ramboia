@@ -52,6 +52,7 @@ define(function (require) {
 
     var TEMPLATES = {
         CHAT: '<p><span class="username"><%- it.usr.name %></span>: <%- it.msg %></p>',
+        SYSTEM: '<p class="system"><em><span class="username"><%- it.usr.name %></span> <%- it.msg %></em></p>',
         ENTRY: '<li title="<%- it.title %> (Requested by <%- it.user %>)">' +
             '<img src="<%- it.thumb %>" />' +
             '<header>' +
@@ -182,7 +183,11 @@ define(function (require) {
     }
 
     function _printMessage(entry) {
-        return $.create(TEMPLATES.CHAT({
+        entry = entry || {};
+
+        var tmpl = entry.system ? TEMPLATES.SYSTEM : TEMPLATES.CHAT;
+
+        return $.create(tmpl({
             it: entry
         }));
     }

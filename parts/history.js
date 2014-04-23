@@ -9,11 +9,12 @@ function getAll(room) {
     return (Storage[room.id] || []).slice(0);
 }
 
-function store(room, usr, msg, date) {
+function store(room, usr, msg, system) {
     Storage[room.id] = Storage[room.id] || [];
 
     var data = {
-        date: date || new Date(),
+        system: system,
+        date: new Date(),
         usr: {
             id: usr.id,
             name: usr.name

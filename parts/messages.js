@@ -25,12 +25,11 @@ function name(name, usr) {
 }
 
 function chat(msg, usr) {
-    var room = usr.getRoom(),
-        entry = history.store(room, usr, msg);
+    var room = usr.getRoom();
+
+    var entry = _sendChat(room, usr, msg);
 
     playlist.parse(room, entry);
-
-    room.messageMembers('chat', [ entry ]);
 }
 
 function init(params, usr) {
@@ -61,9 +60,21 @@ function _getRandomUsername() {
 }
 
 function skip(params, usr) {
-    playlist.voteToSkip(usr.getRoom(), usr, function(err) {
+    var room = usr.getRoom();
+
+    playlist.voteToSkip(room, usr, function (err) {
         usr.message('skip', err);
+
+        _sendChat(room, usr, 'voted to skip', true);
     });
+}
+
+function _sendChat(room, usr, msg, system) {
+    var entry = history.store(room, usr, msg, system);
+
+    room.messageMembers('chat', [ entry ]);
+
+    return entry;
 }
 
 module.exports = {
