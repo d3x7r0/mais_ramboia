@@ -147,6 +147,7 @@ html, body, #ramboia {
       margin: 0;
       padding: 0;
       list-style: none;
+      max-width: 100%;
       height: 100%;
       overflow-x: auto;
       overflow-y: hidden;
@@ -159,9 +160,14 @@ html, body, #ramboia {
       margin: 0 15px;
       padding: 10px 5px;
       opacity: 0.5;
+      height: 100%;
+      width: 25%;
 
-      &, img {
-        height: 100%;
+      span {
+          display: block;
+          width: 100%;
+          height: 100%;
+          background: center center / cover no-repeat;
       }
 
       &:first-child {

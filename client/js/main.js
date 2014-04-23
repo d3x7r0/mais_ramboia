@@ -54,7 +54,7 @@ define(function (require) {
         CHAT: '<p><span class="username"><%- it.usr.name %></span>: <%- it.msg %></p>',
         SYSTEM: '<p class="system"><em><span class="username"><%- it.usr.name %></span> <%- it.msg %></em></p>',
         ENTRY: '<li title="<%- it.title %> (Requested by <%- it.user %>)">' +
-            '<img src="<%- it.thumb %>" />' +
+            '<span style="background-image: url(<%- it.thumb %>)"></span>' +
             '<header>' +
             '<p><%- it.title %></p>' +
             '</header>' +
