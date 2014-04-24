@@ -58,7 +58,7 @@ function init(params, usr) {
 function _getRandomUsername() {
     "use strict";
 
-    return NAMES[Math.random() * NAMES.length | 0] || 'Nameless User';
+    return NAMES[Math.random() * (NAMES.length - 1) | 0] || 'Nameless User';
 }
 
 function skip(params, usr) {
