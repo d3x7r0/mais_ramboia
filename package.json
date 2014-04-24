@@ -28,6 +28,7 @@
     "url": "https://github.com/d3x7r0/mais_ramboia/issues"
   },
   "engines": {
-    "node": "0.10.x"
+    "node": "0.10.x",
+    "npm": "1.4.x"
   }
 }
