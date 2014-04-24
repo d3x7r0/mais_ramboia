@@ -3,6 +3,7 @@
 "use strict";
 
 var express = require('express'),
+    logfmt = require('logfmt'),
     cloak = require('cloak');
 
 var SETTINGS = require('./config');
@@ -12,6 +13,7 @@ var SETTINGS = require('./config');
  */
 var app = express();
 
+app.use(logfmt.requestLogger());
 app.set('trust proxy', SETTINGS.REVERSE_PROXY_MODE);
 
 // Settings

@@ -3,7 +3,7 @@
 var rc = require('rc');
 
 var DEFAULTS = {
-    PORT: 8080,
+    PORT: Number(process.env.PORT || 8080),
     DIR: {
         STATIC: __dirname + '/client',
         BOWER: __dirname + '/bower_components',
