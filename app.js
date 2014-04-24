@@ -12,6 +12,8 @@ var SETTINGS = require('./config');
  */
 var app = express();
 
+app.set('trust proxy', SETTINGS.REVERSE_PROXY_MODE);
+
 // Settings
 app.get('/api/settings', function(req, res, next) {
     var clientSettings = {

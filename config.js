@@ -9,7 +9,8 @@ var DEFAULTS = {
         BOWER: __dirname + '/bower_components',
         LESS: __dirname + '/less'
     },
-    MAX_ENTRIES: 100
+    MAX_ENTRIES: 100,
+    REVERSE_PROXY_MODE: false
 };
 
-module.exports = rc('mais_ramboia', DEFAULTS);
+module.exports = rc('maisramboia', DEFAULTS);
