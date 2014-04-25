@@ -7,7 +7,7 @@ var fs = require('fs');
 
 var NAMES = [];
 
-fs.readFile(__dirname + '/../resources/names.txt', { encoding: 'utf-8' }, function (err, data) {
+fs.readFile(__dirname + '/../../resources/names.txt', { encoding: 'utf-8' }, function (err, data) {
     "use strict";
     if (err) {
         console.warn("Error loading list of random names", err);

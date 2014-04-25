@@ -1,7 +1,7 @@
 /* jshint node:true */
 'use strict';
 
-var SETTINGS = require('../config');
+var SETTINGS = require(__dirname + '/../../config');
 
 var Storage = {};
 
