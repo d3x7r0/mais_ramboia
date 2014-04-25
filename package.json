@@ -4,6 +4,7 @@
   "description": "",
   "main": "app.js",
   "scripts": {
+    "test": "vows --spec",
     "postinstall": "./node_modules/bower/bin/bower install"
   },
   "dependencies": {
@@ -17,7 +18,11 @@
     "underscore": "^1.6.0",
     "xml2js": "^0.4.2"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "horaa": "^0.1.2-alpha",
+    "nodemock": "^0.3.3",
+    "vows": "^0.7.0"
+  },
   "author": "Luis Nabais",
   "license": "MIT",
   "repository": {
