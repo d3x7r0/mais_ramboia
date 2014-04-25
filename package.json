@@ -1,7 +1,7 @@
 {
   "name": "mais_ramboia",
   "version": "0.0.2",
-  "description": "",
+  "description": "Distributed youtube playlists",
   "main": "app.js",
   "scripts": {
     "test": "vows --spec",
