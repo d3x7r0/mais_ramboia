@@ -1,7 +1,8 @@
 /* jshint node:true */
 
 var history = require('./history'),
-    playlist = require('./playlist');
+    playlist = require('./playlist'),
+    users = require('./users');
 
 var fs = require('fs');
 
@@ -38,7 +39,16 @@ function init(params, usr) {
 
     params = params || {};
 
+    if (!params.uuid) {
+        // Ignore connections without uuid
+        return;
+    }
+
+    users.addUser(usr.getRoom(), params.uuid, usr.id);
+
     usr.name = params.name || _getRandomUsername();
+
+    console.log(users.getUsers(usr.getRoom()));
 
     var data = {
         chat: entries,

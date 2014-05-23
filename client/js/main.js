@@ -15,7 +15,8 @@ require.config({
         'reqwest': '../vendor/reqwest/reqwest',
         'bonzo': '../vendor/bonzo/bonzo',
         'qwery': '../vendor/qwery/qwery',
-        'bean': '../vendor/bean/bean'
+        'bean': '../vendor/bean/bean',
+        'fingerprint': '../vendor/fingerprint/fingerprint'
     },
     shim: {
         'underscore': {
@@ -39,7 +40,8 @@ define(function (require) {
         _ = require('underscore'),
         $ = require('dom');
 
-    var cloak = require('cloak');
+    var cloak = require('cloak'),
+        Fingerprint = require('fingerprint');
 
     var player = require('parts/player');
 
@@ -118,7 +120,12 @@ define(function (require) {
     }
 
     function _onBegin() {
-        cloak.message('init');
+        cloak.message('init', {
+            uuid: new Fingerprint({
+                canvas: true,
+                ie_activex: true
+            }).get()
+        });
         _initTemplates();
     }
 

@@ -1,7 +1,8 @@
 /* jshint node:true */
 'use strict';
 
-var cloak = require('cloak');
+var cloak = require('cloak'),
+    users = require('./users');
 
 var providers = [
     require('../providers/youtube')
@@ -128,13 +129,13 @@ function voteToSkip(room, usr, cb) {
         return;
     }
 
-    var userIP = _getUserIP(usr),
+    var user = users.getUserByConnection(room, usr.id),
         votes = _getVotes(room);
 
-    if (votes.indexOf(userIP) === -1) {
-        votes.push(userIP);
+    if (votes.indexOf(user.id) === -1) {
+        votes.push(user.id);
 
-        console.log("User \"%s\" voted to skip video", usr.name);
+        console.log("User \"%s\" (id: %s) voted to skip video", usr.name, user.id);
 
         cb();
 
@@ -145,40 +146,23 @@ function voteToSkip(room, usr, cb) {
 }
 
 function recalculateVotes(room, usr) {
-    var ips = _getUsersIP(room),
+    var ids = _getUsers(room),
         votes = _getVotes(room);
 
-    votes = votes.filter(function (ip) {
-        return ips.indexOf(ip) !== -1;
+    votes = votes.filter(function (id) {
+        return ids.indexOf(id) !== -1;
     });
 
-    if (votes.length > 0 && votes.length + 1 >= (ips.length / 2)) {
+    if (votes.length > 0 && votes.length + 1 >= (ids.length / 2)) {
         console.log("Video will be skipped by majority vote");
         nextVideo(room);
     }
 }
 
-function _getUsersIP(room) {
-    var ips = {},
-        users = room.getMembers();
-
-    for (var i = 0; i < users.length; i++) {
-        var user = users[i],
-            ip = _getUserIP(user);
-
-        if (ip) {
-            ips[ip] = ips[ip] || [];
-            ips[ip].push(user);
-        }
-    }
-
-    return Object.keys(ips);
-}
-
-function _getUserIP(usr) {
-    var socket = usr._socket || {};
-
-    return socket.handshake && socket.handshake.address && socket.handshake.address.address;
+function _getUsers(room) {
+    return users.getUsers(room).map(function(entry) {
+        return entry.id
+    });
 }
 
 module.exports = {
