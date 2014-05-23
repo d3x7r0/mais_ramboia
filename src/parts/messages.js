@@ -12,7 +12,7 @@ fs.readFile(__dirname + '/../../resources/names.txt', { encoding: 'utf-8' }, fun
     if (err) {
         console.warn("Error loading list of random names", err);
     } else {
-        NAMES = data && data.split('\n') || [];
+        NAMES = data && new String(data).split('\n') || [];
     }
 });
 
