@@ -2,20 +2,8 @@
 
 var history = require('./history'),
     playlist = require('./playlist'),
-    users = require('./users');
-
-var fs = require('fs');
-
-var NAMES = [];
-
-fs.readFile(__dirname + '/../../resources/names.txt', { encoding: 'utf-8' }, function (err, data) {
-    "use strict";
-    if (err) {
-        console.warn("Error loading list of random names", err);
-    } else {
-        NAMES = data && new String(data).split('\n') || [];
-    }
-});
+    users = require('./users'),
+    names = require('./names');
 
 function name(name, usr) {
     if (name && name.length > 1) {
@@ -46,7 +34,7 @@ function init(params, usr) {
 
     users.addUser(usr.getRoom(), params.uuid, usr.id);
 
-    usr.name = params.name || _getRandomUsername();
+    usr.name = params.name || names.getRandomName();
 
     console.log(users.getUsers(usr.getRoom()));
 
@@ -63,12 +51,6 @@ function init(params, usr) {
     usr.message('init', data);
 
     history.send(usr.getRoom(), usr, 'has joined the room', true);
-}
-
-function _getRandomUsername() {
-    "use strict";
-
-    return NAMES[Math.random() * (NAMES.length - 1) | 0] || 'Nameless User';
 }
 
 function skip(params, usr) {
