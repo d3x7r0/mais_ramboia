@@ -16,7 +16,8 @@ require.config({
         'bonzo': '../vendor/bonzo/bonzo',
         'qwery': '../vendor/qwery/qwery',
         'bean': '../vendor/bean/bean',
-        'fingerprint': '../vendor/fingerprint/fingerprint'
+        'fingerprint': '../vendor/fingerprint/fingerprint',
+        'moment': '../vendor/moment/moment'
     },
     shim: {
         'underscore': {
@@ -45,6 +46,8 @@ define(function (require) {
 
     var player = require('parts/player');
 
+    var moment = require('moment');
+
     // constants
     var SETTINGS = {
         API: {
@@ -68,6 +71,8 @@ define(function (require) {
 
     var _currentUsername = 'Nameless User';
 
+    var _elapsedTimer;
+
     // DOM elements
     var _$form,
         _$user,
@@ -78,6 +83,9 @@ define(function (require) {
 
     var _$mute,
         _$skip;
+
+    var _$elapsed,
+        _$total;
 
     function _loadSettings() {
         var deferred = when.defer();
@@ -199,6 +207,20 @@ define(function (require) {
         }));
     }
 
+    function _printTime(elapsed, total){
+        _$elapsed.text(moment(0).add(moment.duration(elapsed, 's')).format('mm:ss'));
+        _$total.text(moment(0).add(moment.duration(total, 's')).format('mm:ss'));
+    }
+
+    function _elapsedTimeChecker() {
+        var time = player.time() || {elapsed: 0, total: 0},
+            elapsed = time.elapsed,
+            total = time.total;
+
+        _printTime(elapsed, total);
+        _elapsedTimer = setTimeout(_elapsedTimeChecker, 400);
+    }
+
     function _onDomLoaded() {
         _$form = $('#chat-form');
         _$input = $('input', '#chat-form');
@@ -209,6 +231,9 @@ define(function (require) {
 
         _$mute = $('#mute');
         _$skip = $('#skip');
+
+        _$elapsed = $('.player-time .elapsed', '#video-container');
+        _$total = $('.player-time .total', '#video-container');
 
         _initListeners();
 
@@ -286,8 +311,11 @@ define(function (require) {
 
         if (!video.id) {
             player.stop();
+            clearTimeout(_elapsedTimer);
+            _printTime(0,0);
         } else {
             player.play(video.id, video.timestamp);
+            _elapsedTimeChecker();
             _$skip.attr('disabled', false);
         }
     }

@@ -26,6 +26,8 @@ define(function (require) {
 
     var _player;
 
+    var _elapsed;
+
     (function init() {
         var tag = document.createElement('script');
         tag.src = "https://www.youtube.com/iframe_api";
@@ -106,7 +108,7 @@ define(function (require) {
     function stop() {
         _loaded.promise.then(function () {
             _player.stopVideo();
-        })
+        });
     }
 
     function on() {
@@ -127,6 +129,17 @@ define(function (require) {
 
             return bean.off.apply(null, args);
         });
+    }
+
+    function time(){
+        _loaded.promise.then(function() {
+            _elapsed = {
+                total: _player.getDuration(),
+                elapsed: _player.getCurrentTime()
+            };
+        });
+
+        return _elapsed;
     }
 
     function toggleMute() {
@@ -152,6 +165,7 @@ define(function (require) {
         stop: stop,
         on: on,
         off: off,
+        time: time,
         toggleMute: toggleMute
     };
 });
