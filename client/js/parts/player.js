@@ -26,8 +26,6 @@ define(function (require) {
 
     var _player;
 
-    var _elapsed;
-
     (function init() {
         var tag = document.createElement('script');
         tag.src = "https://www.youtube.com/iframe_api";
@@ -132,14 +130,16 @@ define(function (require) {
     }
 
     function time(){
+        var deferred = when.defer();
+
         _loaded.promise.then(function() {
-            _elapsed = {
+            deferred.resolve({
                 total: _player.getDuration(),
                 elapsed: _player.getCurrentTime()
-            };
+            });
         });
 
-        return _elapsed;
+        return deferred.promise;
     }
 
     function toggleMute() {

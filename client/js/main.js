@@ -63,7 +63,10 @@ define(function (require) {
             '<header>' +
             '<p><%- it.title %></p>' +
             '</header>' +
-            '</li>'
+            '</li>',
+        TIMER: '<span class="elapsed"><%- it.elapsed %></span>' +
+            '<span class="separator"> / </span>' +
+            '<span class="total"><%- it.total %></span>'
     };
 
     // variables
@@ -84,8 +87,7 @@ define(function (require) {
     var _$mute,
         _$skip;
 
-    var _$elapsed,
-        _$total;
+    var _$timer;
 
     function _loadSettings() {
         var deferred = when.defer();
@@ -208,17 +210,27 @@ define(function (require) {
     }
 
     function _printTime(elapsed, total){
-        _$elapsed.text(moment(0).add(moment.duration(elapsed, 's')).format('mm:ss'));
-        _$total.text(moment(0).add(moment.duration(total, 's')).format('mm:ss'));
+        var time = {
+            elapsed: moment(0).add(moment.duration(elapsed, 's')).format('mm:ss'),
+            total: moment(0).add(moment.duration(total, 's')).format('mm:ss')
+        };
+
+        var html = $.create(
+            TEMPLATES.TIMER({
+                it: time
+            })
+        );
+
+        _$timer.html(html);
     }
 
     function _elapsedTimeChecker() {
-        var time = player.time() || {elapsed: 0, total: 0},
-            elapsed = time.elapsed,
-            total = time.total;
+        player.time().then(function(data){
+            var elapsed = data.elapsed,
+                total = data.total;
 
-        _printTime(elapsed, total);
-        _elapsedTimer = setTimeout(_elapsedTimeChecker, 400);
+            _printTime(elapsed, total);
+        });
     }
 
     function _onDomLoaded() {
@@ -232,8 +244,7 @@ define(function (require) {
         _$mute = $('#mute');
         _$skip = $('#skip');
 
-        _$elapsed = $('.player-time .elapsed', '#video-container');
-        _$total = $('.player-time .total', '#video-container');
+        _$timer = $('.player-time', '#video-container');
 
         _initListeners();
 
@@ -297,7 +308,7 @@ define(function (require) {
     }
 
     function _onSkipResponse(error) {
-        if (error && error != 'DUPLICATE_VOTE') {
+        if (error && error !== 'DUPLICATE_VOTE') {
             _$skip.attr('disabled', false);
         }
     }
@@ -311,11 +322,11 @@ define(function (require) {
 
         if (!video.id) {
             player.stop();
-            clearTimeout(_elapsedTimer);
+            clearInterval(_elapsedTimer);
             _printTime(0,0);
         } else {
             player.play(video.id, video.timestamp);
-            _elapsedTimeChecker();
+            _elapsedTimer = setInterval(_elapsedTimeChecker, 600);
             _$skip.attr('disabled', false);
         }
     }
