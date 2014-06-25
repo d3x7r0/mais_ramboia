@@ -1,6 +1,6 @@
 {
   "name": "mais_ramboia",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Distributed youtube playlists",
   "main": "app.js",
   "scripts": {
