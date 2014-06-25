@@ -3,7 +3,8 @@
 var rc = require('rc');
 
 var DEFAULTS = {
-    PORT: Number(process.env.PORT || 8080),
+    PORT: Number(process.env.OPENSHIFT_NODEJS_PORT),
+    IP: process.env.OPENSHIFT_NODEJS_IP,
     DIR: {
         STATIC: __dirname + '/client',
         BOWER: __dirname + '/bower_components',
