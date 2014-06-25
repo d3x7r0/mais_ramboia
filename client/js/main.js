@@ -16,7 +16,8 @@ require.config({
         'bonzo': '../vendor/bonzo/bonzo',
         'qwery': '../vendor/qwery/qwery',
         'bean': '../vendor/bean/bean',
-        'fingerprint': '../vendor/fingerprint/fingerprint'
+        'fingerprint': '../vendor/fingerprint/fingerprint',
+        'moment': '../vendor/moment/moment'
     },
     shim: {
         'underscore': {
@@ -45,6 +46,8 @@ define(function (require) {
 
     var player = require('parts/player');
 
+    var moment = require('moment');
+
     // constants
     var SETTINGS = {
         API: {
@@ -60,13 +63,18 @@ define(function (require) {
             '<header>' +
             '<p><%- it.title %></p>' +
             '</header>' +
-            '</li>'
+            '</li>',
+        TIMER: '<span class="elapsed"><%- it.elapsed %></span>' +
+            '<span class="separator"> / </span>' +
+            '<span class="total"><%- it.total %></span>'
     };
 
     // variables
     var _loaded = when.defer();
 
     var _currentUsername = 'Nameless User';
+
+    var _elapsedTimer;
 
     // DOM elements
     var _$form,
@@ -78,6 +86,8 @@ define(function (require) {
 
     var _$mute,
         _$skip;
+
+    var _$timer;
 
     function _loadSettings() {
         var deferred = when.defer();
@@ -199,6 +209,30 @@ define(function (require) {
         }));
     }
 
+    function _printTime(elapsed, total){
+        var time = {
+            elapsed: moment(0).add(moment.duration(elapsed, 's')).format('mm:ss'),
+            total: moment(0).add(moment.duration(total, 's')).format('mm:ss')
+        };
+
+        var html = $.create(
+            TEMPLATES.TIMER({
+                it: time
+            })
+        );
+
+        _$timer.html(html);
+    }
+
+    function _elapsedTimeChecker() {
+        player.time().then(function(data){
+            var elapsed = data.elapsed,
+                total = data.total;
+
+            _printTime(elapsed, total);
+        });
+    }
+
     function _onDomLoaded() {
         _$form = $('#chat-form');
         _$input = $('input', '#chat-form');
@@ -209,6 +243,8 @@ define(function (require) {
 
         _$mute = $('#mute');
         _$skip = $('#skip');
+
+        _$timer = $('.player-time', '#video-container');
 
         _initListeners();
 
@@ -272,7 +308,7 @@ define(function (require) {
     }
 
     function _onSkipResponse(error) {
-        if (error && error != 'DUPLICATE_VOTE') {
+        if (error && error !== 'DUPLICATE_VOTE') {
             _$skip.attr('disabled', false);
         }
     }
@@ -286,8 +322,11 @@ define(function (require) {
 
         if (!video.id) {
             player.stop();
+            clearInterval(_elapsedTimer);
+            _printTime(0,0);
         } else {
             player.play(video.id, video.timestamp);
+            _elapsedTimer = setInterval(_elapsedTimeChecker, 600);
             _$skip.attr('disabled', false);
         }
     }

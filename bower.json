@@ -23,6 +23,7 @@
     "bonzo": "~2.0.0",
     "qwery": "~4.0.0",
     "bean": "~1.0.6",
-    "fingerprint": "~0.5.3"
+    "fingerprint": "~0.5.3",
+    "moment": "~2.7.0"
   }
 }

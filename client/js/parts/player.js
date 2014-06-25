@@ -106,7 +106,7 @@ define(function (require) {
     function stop() {
         _loaded.promise.then(function () {
             _player.stopVideo();
-        })
+        });
     }
 
     function on() {
@@ -127,6 +127,19 @@ define(function (require) {
 
             return bean.off.apply(null, args);
         });
+    }
+
+    function time(){
+        var deferred = when.defer();
+
+        _loaded.promise.then(function() {
+            deferred.resolve({
+                total: _player.getDuration(),
+                elapsed: _player.getCurrentTime()
+            });
+        });
+
+        return deferred.promise;
     }
 
     function toggleMute() {
@@ -152,6 +165,7 @@ define(function (require) {
         stop: stop,
         on: on,
         off: off,
+        time: time,
         toggleMute: toggleMute
     };
 });
