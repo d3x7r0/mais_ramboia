@@ -211,9 +211,18 @@ define(function (require) {
 
     function _printTime(elapsed, total){
         var time = {
-            elapsed: moment(0).add(moment.duration(elapsed, 's')).format('mm:ss'),
-            total: moment(0).add(moment.duration(total, 's')).format('mm:ss')
+            elapsed: moment(0).add(moment.duration(elapsed, 's')),
+            total: moment(0).add(moment.duration(total, 's'))
         };
+        
+        var format = 'mm:ss';
+        
+        if (time.total.hour() > 0) {
+            format = 'hh:mm:ss';
+        }
+        
+        time.elapsed = time.elapsed.format(format);
+        time.total = time.total.format(format);
 
         var html = $.create(
             TEMPLATES.TIMER({
