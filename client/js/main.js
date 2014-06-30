@@ -211,14 +211,14 @@ define(function (require) {
 
     function _printTime(elapsed, total){
         var time = {
-            elapsed: moment(0).add(moment.duration(elapsed, 's')),
-            total: moment(0).add(moment.duration(total, 's'))
+            elapsed: moment(0).utc().add(moment.duration(elapsed, 's')),
+            total: moment(0).utc().add(moment.duration(total, 's'))
         };
         
         var format = 'mm:ss';
         
         if (time.total.hour() > 0) {
-            format = 'hh:mm:ss';
+            format = 'HH:mm:ss';
         }
         
         time.elapsed = time.elapsed.format(format);
