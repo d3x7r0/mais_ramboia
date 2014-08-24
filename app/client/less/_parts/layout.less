@@ -1,3 +1,31 @@
 html, body {
-  width: 100%;
+  background: @color1;
+  color: @color5;
+  font-family: 'Roboto Condensed', 'Roboto', 'Arial Narrow', Helvetica, Arial sans-serif;
+}
+
+.global-header {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: @headerHeight;
+}
+
+.content-container {
+  margin-top: @headerHeight;
+}
+
+.video-container {
+  position: relative;
+  height: 0;
+  padding-top: 56.25%; // 16:9
+}
+
+.video-player {
+  position: absolute;
+  top: 0;
+  left: 0;
+  .square(100%);
+  background: #000000;
 }
