@@ -6,7 +6,10 @@ module.exports = function (grunt, options) {
             files: [ '<%= pkg.directories.client %>/less/**/*.less' ],
             tasks: [
                 'styles'
-            ]
+            ],
+            options: {
+                'interrupt': true
+            }
         },
         "assets": {
             files: [
@@ -16,7 +19,10 @@ module.exports = function (grunt, options) {
             ],
             tasks: [
                 'assets'
-            ]
+            ],
+            options: {
+                'interrupt': true
+            }
         }
     };
 };
