@@ -10,22 +10,36 @@ html, body {
   left: 0;
   right: 0;
   height: @headerHeight;
+
+  h1, .options {
+    margin: 0;
+    line-height: @headerHeight;
+  }
+
+  .options {
+    margin-top: 0.1em;
+  }
 }
 
 .content-container {
-  margin-top: @headerHeight;
+  padding-top: @headerHeight;
 }
 
-.video-container {
-  position: relative;
-  height: 0;
-  padding-top: 56.25%; // 16:9
-}
-
-.video-player {
-  position: absolute;
-  top: 0;
-  left: 0;
-  .square(100%);
+.player-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   background: #000000;
+}
+
+@media screen and (min-width: 48em) {
+  html, body {
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+  }
+
+  .content-container {
+    height: 100%;
+  }
 }

@@ -15,6 +15,7 @@
   ],
   "dependencies": {
     "modernizr": "~2.7.2",
-    "pure": "~0.5.0"
+    "pure": "~0.5.0",
+    "fontawesome": "~4.2.0"
   }
 }
