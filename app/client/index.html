@@ -23,13 +23,15 @@
     </div>
     <div class="pure-u-3-5 options">
         <ul>
-            <li><button class="pure-button skip"><i class="fa fa-fast-forward"></i> <span>Vote to Skip</span></button></li>
             <li><button class="pure-button kudos"><i class="fa fa-thumbs-up"></i> <span>Give Kudos</span></button></li>
+            <li><button class="pure-button skip"><i class="fa fa-fast-forward"></i> <span>Vote to Skip</span></button></li>
             <li class="more">
                 <button class="pure-button more"><i class="fa fa-ellipsis-v"></i></button>
                 <ul>
                     <li><button class="pure-button mute"><i class="fa fa-volume-off"></i> <span>Mute</span></button></li>
                     <li><button class="pure-button fullscreen"><i class="fa fa-arrows-alt"></i> <span>Fullscreen</span></button></li>
+                    <li><button class="pure-button login"><i class="fa fa-sign-in"></i> <span>Login</span></button></li>
+                    <li><button class="pure-button logout"><i class="fa fa-sign-out"></i> <span>Logout</span></button></li>
                 </ul>
             </li>
         </ul>
@@ -53,7 +55,7 @@
         <div class="wrapper">
             <ul id="playlist" class="tab video-list">
                 <li>
-                    <article class="pure-g current">
+                    <article class="pure-g">
                         <header class="pure-u-2-5">
                             <div class="cover">
                                 <img src="assets/img/test.png" alt="Title" />
@@ -61,20 +63,7 @@
                         </header>
                         <div class="content pure-u-3-5">
                             <h2>Video Title</h2>
-                            <p><span class="time">xx:xx:xx</span> (Added by <span class="user">A long ass username for testing</span>)</p>
-                        </div>
-                    </article>
-                </li>
-                <li>
-                    <article class="pure-g self">
-                        <header class="pure-u-2-5">
-                            <div class="cover">
-                                <img src="assets/img/test.png" alt="Title" />
-                            </div>
-                        </header>
-                        <div class="content pure-u-3-5">
-                            <h2>Video Title</h2>
-                            <p><span class="time">xx:xx:xx</span> (Added by <span class="user">A long ass username for testing</span>)</p>
+                            <p class="meta"><span class="time">xx:xx:xx</span> (Added by <span class="user">A long ass username for testing</span>)</p>
                         </div>
                     </article>
                 </li>
@@ -87,7 +76,7 @@
                         </header>
                         <div class="content pure-u-3-5">
                             <h2>Video Title</h2>
-                            <p><span class="time">xx:xx:xx</span> (Added by <span class="user">A long ass username for testing</span>)</p>
+                            <p class="meta"><span class="time">xx:xx:xx</span> (Added by <span class="user">A long ass username for testing</span>)</p>
                         </div>
                     </article>
                 </li>
@@ -100,7 +89,7 @@
                         </header>
                         <div class="content pure-u-3-5">
                             <h2>Video Title</h2>
-                            <p><span class="time">xx:xx:xx</span> (Added by <span class="user">A long ass username for testing</span>)</p>
+                            <p class="meta"><span class="time">xx:xx:xx</span> (Added by <span class="user">A long ass username for testing</span>)</p>
                         </div>
                     </article>
                 </li>
@@ -113,7 +102,7 @@
                         </header>
                         <div class="content pure-u-3-5">
                             <h2>Video Title</h2>
-                            <p><span class="time">xx:xx:xx</span> (Added by <span class="user">A long ass username for testing</span>)</p>
+                            <p class="meta"><span class="time">xx:xx:xx</span> (Added by <span class="user">A long ass username for testing</span>)</p>
                         </div>
                     </article>
                 </li>
@@ -126,7 +115,7 @@
                         </header>
                         <div class="content pure-u-3-5">
                             <h2>Video Title</h2>
-                            <p><span class="time">xx:xx:xx</span> (Added by <span class="user">A long ass username for testing</span>)</p>
+                            <p class="meta"><span class="time">xx:xx:xx</span> (Added by <span class="user">A long ass username for testing</span>)</p>
                         </div>
                     </article>
                 </li>
@@ -139,7 +128,7 @@
                         </header>
                         <div class="content pure-u-3-5">
                             <h2>Video Title</h2>
-                            <p><span class="time">xx:xx:xx</span> (Added by <span class="user">A long ass username for testing</span>)</p>
+                            <p class="meta"><span class="time">xx:xx:xx</span> (Added by <span class="user">A long ass username for testing</span>)</p>
                         </div>
                     </article>
                 </li>
@@ -152,7 +141,7 @@
                         </header>
                         <div class="content pure-u-3-5">
                             <h2>Video Title</h2>
-                            <p><span class="time">xx:xx:xx</span> (Added by <span class="user">A long ass username for testing</span>)</p>
+                            <p class="meta"><span class="time">xx:xx:xx</span> (Added by <span class="user">A long ass username for testing</span>)</p>
                         </div>
                     </article>
                 </li>
@@ -165,7 +154,7 @@
                         </header>
                         <div class="content pure-u-3-5">
                             <h2>Video Title</h2>
-                            <p><span class="time">xx:xx:xx</span> (Added by <span class="user">A long ass username for testing</span>)</p>
+                            <p class="meta"><span class="time">xx:xx:xx</span> (Added by <span class="user">A long ass username for testing</span>)</p>
                         </div>
                     </article>
                 </li>
@@ -178,123 +167,183 @@
                         </header>
                         <div class="content pure-u-3-5">
                             <h2>Video Title</h2>
-                            <p><span class="time">xx:xx:xx</span> (Added by <span class="user">A long ass username for testing</span>)</p>
+                            <p class="meta"><span class="time">xx:xx:xx</span> (Added by <span class="user">A long ass username for testing</span>)</p>
+                        </div>
+                    </article>
+                </li>
+                <li>
+                    <article class="pure-g">
+                        <header class="pure-u-2-5">
+                            <div class="cover">
+                                <img src="assets/img/test.png" alt="Title" />
+                            </div>
+                        </header>
+                        <div class="content pure-u-3-5">
+                            <h2>Video Title</h2>
+                            <p class="meta"><span class="time">xx:xx:xx</span> (Added by <span class="user">A long ass username for testing</span>)</p>
+                        </div>
+                    </article>
+                </li>
+                <li>
+                    <article class="pure-g">
+                        <header class="pure-u-2-5">
+                            <div class="cover">
+                                <img src="assets/img/test.png" alt="Title" />
+                            </div>
+                        </header>
+                        <div class="content pure-u-3-5">
+                            <h2>Video Title</h2>
+                            <p class="meta"><span class="time">xx:xx:xx</span> (Added by <span class="user">A long ass username for testing</span>)</p>
+                        </div>
+                    </article>
+                </li>
+                <li>
+                    <article class="pure-g">
+                        <header class="pure-u-2-5">
+                            <div class="cover">
+                                <img src="assets/img/test.png" alt="Title" />
+                            </div>
+                        </header>
+                        <div class="content pure-u-3-5">
+                            <h2>Video Title</h2>
+                            <p class="meta"><span class="time">xx:xx:xx</span> (Added by <span class="user">A long ass username for testing</span>)</p>
                         </div>
                     </article>
                 </li>
             </ul>
-            <ul id="chat" class="chat-list tab selected">
-                <li>
-                    <article class="pure-g">
-                        <header class="pure-u-2-5">
-                            <h3 class="time">xx:xx</h3>
-                            <h2>A long ass username to test overflow behaviour</h2>
-                        </header>
-                        <div class="content pure-u-3-5">
-                            <p>Fluctuss sunt rationes de lotus vigil. Habenas resistere in varius tubinga! Ecce, glos! Ubi est gratis triticum? Historias credere in bi-color brigantium! Fidelis diatria virtualiter visums advena est. Nunquam desiderium glos.</p>
+
+            <div id="chat" class="chat-list tab selected">
+                <form id="chat-form" class="pure-form">
+                    <fieldset>
+                        <div class="wrapper">
+                            <div class="nickname">
+                                <button type="button" class="pure-button" name="nickname-change" id="nickname-change" title="Change Nickname"><i class="fa fa-user"></i> <span>Change Nickname</span></button>
+                            </div>
+
+                            <div class="input">
+                                <label for="chat-input">Chat:</label>
+                                <input type="text" id="chat-input" name="chat-input" placeholder="Chat" />
+                            </div>
+
+                            <div class="submit">
+                                <button type="submit" class="pure-button pure-button-primary">Send</button>
+                            </div>
                         </div>
-                    </article>
-                </li>
-                <li>
-                    <article class="pure-g self">
-                        <header class="pure-u-2-5">
-                            <h3 class="time">xx:xx</h3>
-                            <h2>A long ass username to test overflow behaviour</h2>
-                        </header>
-                        <div class="content pure-u-3-5">
-                            <p>Fluctuss sunt rationes de lotus vigil. Habenas resistere in varius tubinga! Ecce, glos! Ubi est gratis triticum? Historias credere in bi-color brigantium! Fidelis diatria virtualiter visums advena est. Nunquam desiderium glos.</p>
-                        </div>
-                    </article>
-                </li>
-                <li>
-                    <article class="pure-g">
-                        <header class="pure-u-2-5">
-                            <h3 class="time">xx:xx</h3>
-                            <h2>A long ass username to test overflow behaviour</h2>
-                        </header>
-                        <div class="content pure-u-3-5">
-                            <p>Fluctuss sunt rationes de lotus vigil. Habenas resistere in varius tubinga! Ecce, glos! Ubi est gratis triticum? Historias credere in bi-color brigantium! Fidelis diatria virtualiter visums advena est. Nunquam desiderium glos.</p>
-                        </div>
-                    </article>
-                </li>
-                <li>
-                    <article class="pure-g">
-                        <header class="pure-u-2-5">
-                            <h3 class="time">xx:xx</h3>
-                            <h2>A long ass username to test overflow behaviour</h2>
-                        </header>
-                        <div class="content pure-u-3-5">
-                            <p>Fluctuss sunt rationes de lotus vigil. Habenas resistere in varius tubinga! Ecce, glos! Ubi est gratis triticum? Historias credere in bi-color brigantium! Fidelis diatria virtualiter visums advena est. Nunquam desiderium glos.</p>
-                        </div>
-                    </article>
-                </li>
-                <li>
-                    <article class="pure-g">
-                        <header class="pure-u-2-5">
-                            <h3 class="time">xx:xx</h3>
-                            <h2>A long ass username to test overflow behaviour</h2>
-                        </header>
-                        <div class="content pure-u-3-5">
-                            <p>Fluctuss sunt rationes de lotus vigil. Habenas resistere in varius tubinga! Ecce, glos! Ubi est gratis triticum? Historias credere in bi-color brigantium! Fidelis diatria virtualiter visums advena est. Nunquam desiderium glos.</p>
-                        </div>
-                    </article>
-                </li>
-                <li>
-                    <article class="pure-g">
-                        <header class="pure-u-2-5">
-                            <h3 class="time">xx:xx</h3>
-                            <h2>A long ass username to test overflow behaviour</h2>
-                        </header>
-                        <div class="content pure-u-3-5">
-                            <p>Fluctuss sunt rationes de lotus vigil. Habenas resistere in varius tubinga! Ecce, glos! Ubi est gratis triticum? Historias credere in bi-color brigantium! Fidelis diatria virtualiter visums advena est. Nunquam desiderium glos.</p>
-                        </div>
-                    </article>
-                </li>
-                <li>
-                    <article class="pure-g">
-                        <header class="pure-u-2-5">
-                            <h3 class="time">xx:xx</h3>
-                            <h2>A long ass username to test overflow behaviour</h2>
-                        </header>
-                        <div class="content pure-u-3-5">
-                            <p>Fluctuss sunt rationes de lotus vigil. Habenas resistere in varius tubinga! Ecce, glos! Ubi est gratis triticum? Historias credere in bi-color brigantium! Fidelis diatria virtualiter visums advena est. Nunquam desiderium glos.</p>
-                        </div>
-                    </article>
-                </li>
-                <li>
-                    <article class="pure-g">
-                        <header class="pure-u-2-5">
-                            <h3 class="time">xx:xx</h3>
-                            <h2>A long ass username to test overflow behaviour</h2>
-                        </header>
-                        <div class="content pure-u-3-5">
-                            <p>Fluctuss sunt rationes de lotus vigil. Habenas resistere in varius tubinga! Ecce, glos! Ubi est gratis triticum? Historias credere in bi-color brigantium! Fidelis diatria virtualiter visums advena est. Nunquam desiderium glos.</p>
-                        </div>
-                    </article>
-                </li>
-                <li>
-                    <article class="pure-g">
-                        <header class="pure-u-2-5">
-                            <h3 class="time">xx:xx</h3>
-                            <h2>A long ass username to test overflow behaviour</h2>
-                        </header>
-                        <div class="content pure-u-3-5">
-                            <p>Fluctuss sunt rationes de lotus vigil. Habenas resistere in varius tubinga! Ecce, glos! Ubi est gratis triticum? Historias credere in bi-color brigantium! Fidelis diatria virtualiter visums advena est. Nunquam desiderium glos.</p>
-                        </div>
-                    </article>
-                </li>
-                <li>
-                    <article class="pure-g">
-                        <header class="pure-u-2-5">
-                            <h3 class="time">xx:xx</h3>
-                            <h2>A long ass username to test overflow behaviour</h2>
-                        </header>
-                        <div class="content pure-u-3-5">
-                            <p>Fluctuss sunt rationes de lotus vigil. Habenas resistere in varius tubinga! Ecce, glos! Ubi est gratis triticum? Historias credere in bi-color brigantium! Fidelis diatria virtualiter visums advena est. Nunquam desiderium glos.</p>
-                        </div>
-                    </article>
-                </li>
-            </ul>
+                    </fieldset>
+                </form>
+                <ul>
+                    <li>
+                        <article class="pure-g">
+                            <header class="pure-u-2-5">
+                                <h3 class="time">xx:xx</h3>
+                                <h2>A long ass username to test overflow behaviour</h2>
+                            </header>
+                            <div class="content pure-u-3-5">
+                                <p>Fluctuss sunt rationes de lotus vigil. Habenas resistere in varius tubinga! Ecce, glos! Ubi est gratis triticum? Historias credere in bi-color brigantium! Fidelis diatria virtualiter visums advena est. Nunquam desiderium glos.</p>
+                            </div>
+                        </article>
+                    </li>
+                    <li>
+                        <article class="pure-g self">
+                            <header class="pure-u-2-5">
+                                <h3 class="time">xx:xx</h3>
+                                <h2>A long ass username to test overflow behaviour</h2>
+                            </header>
+                            <div class="content pure-u-3-5">
+                                <p>Fluctuss sunt rationes de lotus vigil. Habenas resistere in varius tubinga! Ecce, glos! Ubi est gratis triticum? Historias credere in bi-color brigantium! Fidelis diatria virtualiter visums advena est. Nunquam desiderium glos.</p>
+                            </div>
+                        </article>
+                    </li>
+                    <li>
+                        <article class="pure-g">
+                            <header class="pure-u-2-5">
+                                <h3 class="time">xx:xx</h3>
+                                <h2>A long ass username to test overflow behaviour</h2>
+                            </header>
+                            <div class="content pure-u-3-5">
+                                <p>Fluctuss sunt rationes de lotus vigil. Habenas resistere in varius tubinga! Ecce, glos! Ubi est gratis triticum? Historias credere in bi-color brigantium! Fidelis diatria virtualiter visums advena est. Nunquam desiderium glos.</p>
+                            </div>
+                        </article>
+                    </li>
+                    <li>
+                        <article class="pure-g">
+                            <header class="pure-u-2-5">
+                                <h3 class="time">xx:xx</h3>
+                                <h2>A long ass username to test overflow behaviour</h2>
+                            </header>
+                            <div class="content pure-u-3-5">
+                                <p>Fluctuss sunt rationes de lotus vigil. Habenas resistere in varius tubinga! Ecce, glos! Ubi est gratis triticum? Historias credere in bi-color brigantium! Fidelis diatria virtualiter visums advena est. Nunquam desiderium glos.</p>
+                            </div>
+                        </article>
+                    </li>
+                    <li>
+                        <article class="pure-g">
+                            <header class="pure-u-2-5">
+                                <h3 class="time">xx:xx</h3>
+                                <h2>A long ass username to test overflow behaviour</h2>
+                            </header>
+                            <div class="content pure-u-3-5">
+                                <p>Fluctuss sunt rationes de lotus vigil. Habenas resistere in varius tubinga! Ecce, glos! Ubi est gratis triticum? Historias credere in bi-color brigantium! Fidelis diatria virtualiter visums advena est. Nunquam desiderium glos.</p>
+                            </div>
+                        </article>
+                    </li>
+                    <li>
+                        <article class="pure-g">
+                            <header class="pure-u-2-5">
+                                <h3 class="time">xx:xx</h3>
+                                <h2>A long ass username to test overflow behaviour</h2>
+                            </header>
+                            <div class="content pure-u-3-5">
+                                <p>Fluctuss sunt rationes de lotus vigil. Habenas resistere in varius tubinga! Ecce, glos! Ubi est gratis triticum? Historias credere in bi-color brigantium! Fidelis diatria virtualiter visums advena est. Nunquam desiderium glos.</p>
+                            </div>
+                        </article>
+                    </li>
+                    <li>
+                        <article class="pure-g">
+                            <header class="pure-u-2-5">
+                                <h3 class="time">xx:xx</h3>
+                                <h2>A long ass username to test overflow behaviour</h2>
+                            </header>
+                            <div class="content pure-u-3-5">
+                                <p>Fluctuss sunt rationes de lotus vigil. Habenas resistere in varius tubinga! Ecce, glos! Ubi est gratis triticum? Historias credere in bi-color brigantium! Fidelis diatria virtualiter visums advena est. Nunquam desiderium glos.</p>
+                            </div>
+                        </article>
+                    </li>
+                    <li>
+                        <article class="pure-g">
+                            <header class="pure-u-2-5">
+                                <h3 class="time">xx:xx</h3>
+                                <h2>A long ass username to test overflow behaviour</h2>
+                            </header>
+                            <div class="content pure-u-3-5">
+                                <p>Fluctuss sunt rationes de lotus vigil. Habenas resistere in varius tubinga! Ecce, glos! Ubi est gratis triticum? Historias credere in bi-color brigantium! Fidelis diatria virtualiter visums advena est. Nunquam desiderium glos.</p>
+                            </div>
+                        </article>
+                    </li>
+                    <li>
+                        <article class="pure-g">
+                            <header class="pure-u-2-5">
+                                <h3 class="time">xx:xx</h3>
+                                <h2>A long ass username to test overflow behaviour</h2>
+                            </header>
+                            <div class="content pure-u-3-5">
+                                <p>Fluctuss sunt rationes de lotus vigil. Habenas resistere in varius tubinga! Ecce, glos! Ubi est gratis triticum? Historias credere in bi-color brigantium! Fidelis diatria virtualiter visums advena est. Nunquam desiderium glos.</p>
+                            </div>
+                        </article>
+                    </li>
+                    <li>
+                        <article class="pure-g">
+                            <header class="pure-u-2-5">
+                                <h3 class="time">xx:xx</h3>
+                                <h2>A long ass username to test overflow behaviour</h2>
+                            </header>
+                            <div class="content pure-u-3-5">
+                                <p>Fluctuss sunt rationes de lotus vigil. Habenas resistere in varius tubinga! Ecce, glos! Ubi est gratis triticum? Historias credere in bi-color brigantium! Fidelis diatria virtualiter visums advena est. Nunquam desiderium glos.</p>
+                            </div>
+                        </article>
+                    </li>
+                </ul>
+            </div>
         </div>
     </section>
 </div>
