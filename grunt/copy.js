@@ -15,6 +15,16 @@ module.exports = function(grunt, options) {
                     dest: '<%= pkg.directories.public %>/'
                 }
             ]
+        },
+        'scripts': {
+            files: [
+                {
+                    cwd: '<%= pkg.directories.client %>/js/',
+                    expand: true,
+                    src: [ '**/*.js' ],
+                    dest: '<%= pkg.directories.public %>/js/'
+                }
+            ]
         }
     };
 };

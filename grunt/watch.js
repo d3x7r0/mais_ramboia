@@ -2,14 +2,14 @@ module.exports = function (grunt, options) {
     "use strict";
 
     return {
+        options: {
+            'interrupt': true
+        },
         "styles": {
             files: [ '<%= pkg.directories.client %>/less/**/*.less' ],
             tasks: [
                 'styles'
-            ],
-            options: {
-                'interrupt': true
-            }
+            ]
         },
         "assets": {
             files: [
@@ -19,10 +19,13 @@ module.exports = function (grunt, options) {
             ],
             tasks: [
                 'assets'
-            ],
-            options: {
-                'interrupt': true
-            }
+            ]
+        },
+        "scripts": {
+            files: [ '<%= pkg.directories.client %>/js/**/*.js' ],
+            tasks: [
+                'scripts'
+            ]
         }
     };
 };

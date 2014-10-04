@@ -7,6 +7,7 @@ module.exports = function(grunt, options) {
             '<%= pkg.directories.public %>/assets',
             '<%= pkg.directories.public %>/**/*.html'
         ],
-        'styles': '<%= pkg.directories.public %>/css'
+        'styles': '<%= pkg.directories.public %>/css',
+        'scripts': '<%= pkg.directories.public %>/js'
     };
 };
