@@ -3,6 +3,10 @@ module.exports = function(grunt, options) {
 
     return {
         "styles": {
+            options: {
+                // A bug with clean-css < 2.4 strips -webkit-flexbox
+                noAdvanced: true
+            },
             files: [
                 {
                     cwd: '<%= pkg.directories.public %>/css/',

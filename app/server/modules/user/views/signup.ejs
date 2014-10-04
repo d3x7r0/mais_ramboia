@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Sign Up</title>
+
+    <link rel="stylesheet" type="text/css" href="/css/login.min.css"/>
+</head>
+<body>
+<div class="pure-g">
+
+    <div class="pure-u-md-1-5"></div>
+    <div class="pure-u-1 pure-u-md-3-5 ">
+
+        <h1><span class="fa fa-sign-in"></span> Sign Up</h1>
+
+        <!-- show any messages that come back with authentication -->
+        <% if (message && message.length > 0) { %>
+        <div class="pure-alert pure-alert-error"><%= message %></div>
+        <% } %>
+
+        <!-- LOGIN FORM -->
+        <form class="pure-form pure-form-aligned" action="" method="post">
+            <div class="pure-control-group">
+                <label>E-Mail</label>
+                <input type="email" name="email" placeholder="E-Mail" required>
+            </div>
+
+            <div class="pure-control-group">
+                <label>Password</label>
+                <input type="password" name="password" placeholder="Password" required>
+            </div>
+
+            <div class="pure-controls">
+                <button type="submit" class="pure-button pure-button-primary">Sign Up</button>
+            </div>
+        </form>
+
+        <hr/>
+
+        <p>Already have an account? <a href="/user/login">Login</a></p>
+        <p>Or go <a href="/">home</a>.</p>
+
+    </div>
+
+</div>
+</body>
+</html>

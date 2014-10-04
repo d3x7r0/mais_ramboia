@@ -5,7 +5,7 @@ module.exports = function (grunt, options) {
         'config': {
             rjsConfig: '<%= pkg.directories.client %>/js/config.js',
             options: {
-                exclude: [ 'modernizr', 'pure', 'fontawesome', 'requirejs' ],
+                exclude: [ 'modernizr', 'pure', 'pure-extras', 'fontawesome', 'requirejs' ],
                 baseUrl: '<%= pkg.directories.client %>/js'
             }
         }

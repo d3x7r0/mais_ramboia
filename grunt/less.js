@@ -13,7 +13,7 @@ module.exports = function(grunt, options) {
                     expand: true,
                     src: [
                         '**/*.less',
-                        '!_parts/*'
+                        '!_parts/**'
                     ],
                     dest: '<%= pkg.directories.public %>/css/',
                     ext: '.css'

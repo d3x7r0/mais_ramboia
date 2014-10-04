@@ -8,6 +8,11 @@ var DEFAULTS = {
     REVERSE_PROXY_MODE: false,
     DIR: {
         CLIENT: __dirname + '/../../_public'
+    },
+    AUTH: {
+        SESSION: {
+            SECRET: 'session secret here'
+        }
     }
 };
 

@@ -21,6 +21,10 @@
     "underscore": "~1.7.0",
     "q": "~1.x.x",
     "moment": "~2.8.3",
-    "zepto": "~1.1.4"
+    "zepto": "~1.1.4",
+    "pure-extras": "*"
+  },
+  "resolutions": {
+    "pure": "~0.5.0"
   }
 }
