@@ -7,7 +7,7 @@ var DEFAULTS = {
     PORT: Number(process.env.PORT || 8080),
     REVERSE_PROXY_MODE: false,
     DIR: {
-        CLIENT: __dirname + '/public'
+        CLIENT: __dirname + '/../../_public'
     }
 };
 

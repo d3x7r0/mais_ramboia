@@ -50,6 +50,6 @@
     "server": "app/server",
     "test-client": "test/client",
     "test-server": "test/server",
-    "public": "app/server/public"
+    "public": "_public"
   }
 }
