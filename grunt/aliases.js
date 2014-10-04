@@ -7,6 +7,6 @@ module.exports = function(grunt, options) {
         'assets': [ 'clean:assets', 'copy:assets' ],
         "styles": [ 'clean:styles', 'less:styles', 'autoprefixer:styles', 'cssmin:styles' ],
         // TODO LN: optimize instead of copying scripts
-        "scripts": [ 'clean:scripts', 'copy:scripts' ]
+        "scripts": [ 'clean:scripts', 'copy:scripts', 'jst:compile' ]
     }
 };
