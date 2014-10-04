@@ -77,6 +77,8 @@ define(function (require) {
     var _elapsedTimer;
 
     // DOM elements
+    var _$container;
+
     var _$form,
         _$user,
         _$input;
@@ -85,7 +87,8 @@ define(function (require) {
         _$playlist;
 
     var _$mute,
-        _$skip;
+        _$skip,
+        _$fullscreen;
 
     var _$timer;
 
@@ -243,6 +246,8 @@ define(function (require) {
     }
 
     function _onDomLoaded() {
+        _$container = $('#ramboia');
+
         _$form = $('#chat-form');
         _$input = $('input', '#chat-form');
         _$user = $('#chat-name');
@@ -252,10 +257,12 @@ define(function (require) {
 
         _$mute = $('#mute');
         _$skip = $('#skip');
+        _$fullscreen = $('#fullscreen');
 
         _$timer = $('.player-time', '#video-container');
 
         _initListeners();
+        _checkFullscreen();
 
         _loaded.resolve();
     }
@@ -266,6 +273,17 @@ define(function (require) {
 
         _$mute.on('click', _onMuteToggle);
         _$skip.on('click', _onSkipClick);
+        _$fullscreen.on('click', _onFullscreenToggle);
+    }
+
+    function _checkFullscreen() {
+        var $el = _$container[0] || {};
+
+        var hasFullscreen = document.fullScreenEnabled || document.fullscreenEnabled || document.msFullscreenEnabled || document.mozFullScreenEnabled || document.webkitFullscreenEnabled;
+
+        if (hasFullscreen) {
+            _$fullscreen.attr('disabled', false);
+        }
     }
 
     function _onSubmit(e) {
@@ -319,6 +337,48 @@ define(function (require) {
     function _onSkipResponse(error) {
         if (error && error !== 'DUPLICATE_VOTE') {
             _$skip.attr('disabled', false);
+        }
+    }
+
+    function _onFullscreenToggle() {
+        var isFullscreen = document.fullscreenElement || document.msFullscreenElement || document.mozFullScreenElement || document.webkitFullscreenElement;
+
+        if (isFullscreen) {
+            _exitFullscreen(_$container[0]);
+        } else {
+            _goFullscreen(_$container[0]);
+        }
+    }
+
+    function _goFullscreen(element) {
+        if(element.requestFullscreen) {
+            element.requestFullscreen();
+        } else if(element.mozRequestFullScreen) {
+            element.mozRequestFullScreen();
+        } else if(element.webkitRequestFullscreen) {
+            element.webkitRequestFullscreen();
+        } else if(element.msRequestFullscreen) {
+            element.msRequestFullscreen();
+        }
+    }
+
+    function _exitFullscreen(element) {
+        if(element.exitFullscreen) {
+            element.exitFullscreen();
+        } else if(element.mozCancelFullScreen) {
+            element.mozCancelFullScreen();
+        } else if(element.webkitExitFullscreen) {
+            element.webkitExitFullscreen();
+        } else if(element.msExitFullscreen) {
+            element.msExitFullscreen();
+        } else if(document.exitFullscreen) {
+            document.exitFullscreen();
+        } else if(document.mozCancelFullScreen) {
+            document.mozCancelFullScreen();
+        } else if(document.webkitExitFullscreen) {
+            document.webkitExitFullscreen();
+        } else if(document.msExitFullscreen) {
+            document.msExitFullscreen();
         }
     }
 
