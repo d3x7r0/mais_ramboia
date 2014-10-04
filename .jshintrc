@@ -1,0 +1,14 @@
+{
+    "eqeqeq":true,
+    "unused":false,
+    "immed":true,
+    "latedef":true,
+    "newcap":true,
+    "noarg":true,
+    "sub":true,
+    "boss":true,
+    "eqnull":true,
+    "browser":false,
+    "node": true,
+    "notypeof": true
+}
