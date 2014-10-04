@@ -198,6 +198,11 @@ define(function (require) {
             }
         }
 
+        if (state === YT.PlayerState.PLAYING && this._locked) {
+            this._player.stopVideo();
+            isProtected = true;
+        }
+
         return isProtected;
     };
 
