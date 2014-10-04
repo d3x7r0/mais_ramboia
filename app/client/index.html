@@ -12,22 +12,22 @@
 
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
 </head>
-<body>
+<body id="ramboia">
 <header class="global-header pure-g">
     <div class="pure-u-2-5">
         <h1>+Ramboia</h1>
     </div>
     <div class="pure-u-3-5 options">
         <ul>
-            <li><button class="pure-button kudos"><i class="fa fa-thumbs-up"></i> <span>Give Kudos</span></button></li>
-            <li><button class="pure-button skip"><i class="fa fa-fast-forward"></i> <span>Vote to Skip</span></button></li>
+            <li><button class="pure-button kudos" id="kudos" disabled><i class="fa fa-thumbs-up"></i> <span>Give Kudos</span></button></li>
+            <li><button class="pure-button skip" id="skip" disabled><i class="fa fa-fast-forward"></i> <span>Vote to Skip</span></button></li>
             <li class="more">
                 <button class="pure-button more"><i class="fa fa-ellipsis-v"></i></button>
                 <ul>
-                    <li><button class="pure-button mute"><i class="fa fa-volume-off"></i> <span>Mute</span></button></li>
-                    <li><button class="pure-button fullscreen"><i class="fa fa-arrows-alt"></i> <span>Fullscreen</span></button></li>
-                    <li><button class="pure-button login"><i class="fa fa-sign-in"></i> <span>Login</span></button></li>
-                    <li><button class="pure-button logout"><i class="fa fa-sign-out"></i> <span>Logout</span></button></li>
+                    <li><button class="pure-button mute" id="mute" disabled><i class="fa fa-volume-off"></i> <span>Mute</span></button></li>
+                    <li><button class="pure-button fullscreen" id="fullscreen" disabled><i class="fa fa-arrows-alt"></i> <span>Fullscreen</span></button></li>
+                    <li><button class="pure-button login" id="login" disabled><i class="fa fa-sign-in"></i> <span>Login</span></button></li>
+                    <li><button class="pure-button logout" id="logout" disabled><i class="fa fa-sign-out"></i> <span>Logout</span></button></li>
                 </ul>
             </li>
         </ul>
@@ -38,7 +38,6 @@
         <div class="video-container">
             <div class="wrapper">
                 <div id="player" class="video-player"></div>
-                <!--<iframe width="640" height="480" src="//www.youtube.com/embed/dQw4w9WgXcQ" frameborder="0" allowfullscreen class="video-player"></iframe>-->
             </div>
         </div>
     </section>
@@ -214,16 +213,16 @@
                     <fieldset>
                         <div class="wrapper">
                             <div class="nickname">
-                                <button type="button" class="pure-button" name="nickname-change" id="nickname-change" title="Change Nickname"><i class="fa fa-user"></i> <span>Change Nickname</span></button>
+                                <button type="button" class="pure-button" name="chat-name" id="chat-name" title="Change Nickname" disabled><i class="fa fa-user"></i> <span>Change Nickname</span></button>
                             </div>
 
                             <div class="input">
                                 <label for="chat-input">Chat:</label>
-                                <input type="text" id="chat-input" name="chat-input" placeholder="Chat" />
+                                <input type="text" id="chat-input" name="chat-input" placeholder="Chat" disabled />
                             </div>
 
                             <div class="submit">
-                                <button type="submit" class="pure-button pure-button-primary">Send</button>
+                                <button type="submit" class="pure-button pure-button-primary" disabled>Send</button>
                             </div>
                         </div>
                     </fieldset>
