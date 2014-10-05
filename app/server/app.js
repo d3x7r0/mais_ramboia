@@ -3,17 +3,26 @@
 
 var SETTINGS = require(__dirname + '/config');
 
+var fs = require('fs');
+
 var express = require('express'),
     socket = require('socket.io'),
-    logfmt = require('logfmt'),
     http = require('http');
+
+var logfmt = require('logfmt'),
+    session = require('express-session');
 
 var app = express(),
     server = http.Server(app),
     io = socket(server);
 
-// Logger
+// Middleware
 app.use(logfmt.requestLogger());
+app.use(session({
+    secret: SETTINGS.AUTH.SESSION.SECRET,
+    resave: true,
+    saveUninitialized: true
+}));
 
 // Work with reverse proxies
 app.set('trust proxy', SETTINGS.REVERSE_PROXY_MODE);
@@ -27,13 +36,19 @@ app.set('views', __dirname + '/views');
 app.use(express.static(SETTINGS.DIR.CLIENT));
 
 // Modules
+function getModules(DIR) {
+    return fs.readdirSync(DIR).filter(function (entry) {
+        return fs.statSync(DIR + '/' + entry).isDirectory();
+    });
+}
+
 var MODULE_DIR = './modules/',
-    MODULES = [
-        'user'
-    ];
+    MODULES = getModules(MODULE_DIR);
 
 MODULES.forEach(function loadModule(moduleName) {
-    app.use('/' + moduleName, require(MODULE_DIR + moduleName));
+    var module = require(MODULE_DIR + moduleName)(app, io);
+
+    app.use('/' + moduleName, module);
 });
 
 // Socket.IO

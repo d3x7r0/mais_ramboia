@@ -12,6 +12,11 @@ var DEFAULTS = {
     AUTH: {
         SESSION: {
             SECRET: 'session secret here'
+        },
+        GOOGLE: {
+            'CLIENT_ID': 'your-secret-clientID-here',
+            'CLIENT_SECRET': 'your-client-secret-here',
+            'CALLBACK_URL': 'http://127.0.0.1:8080/user/login/google'
         }
     }
 };
