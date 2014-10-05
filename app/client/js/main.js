@@ -5,6 +5,8 @@ define(function (require) {
     var console = require('utils/console'),
         when = require('promises');
 
+    var io = require('socket.io');
+
     var _ = require('underscore'),
         $ = require('zepto');
 
@@ -31,6 +33,14 @@ define(function (require) {
             console.log("Playing");
         });
         _player.mute();
+
+        var socket = io.connect('/', {
+            path: '/rt'
+        });
+
+        socket.on('connect', function() {
+            console.log("Connected");
+        });
     }
 
     function _delta(startTime) {

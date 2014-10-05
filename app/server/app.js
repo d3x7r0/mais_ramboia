@@ -6,15 +6,13 @@ var SETTINGS = require(__dirname + '/config');
 var fs = require('fs');
 
 var express = require('express'),
-    socket = require('socket.io'),
     http = require('http');
 
 var logfmt = require('logfmt'),
     session = require('express-session');
 
 var app = express(),
-    server = http.Server(app),
-    io = socket(server);
+    server = http.Server(app);
 
 // Middleware
 app.use(logfmt.requestLogger());
@@ -46,14 +44,15 @@ var MODULE_DIR = './modules/',
     MODULES = getModules(MODULE_DIR);
 
 MODULES.forEach(function loadModule(moduleName) {
-    var module = require(MODULE_DIR + moduleName)(app, io);
+    var path,module;
 
-    app.use('/' + moduleName, module);
-});
+    path = '/' + moduleName;
 
-// Socket.IO
-io.on('connection', function onSocketConnected() {
-    console.log("Socket connected");
+    module = require(MODULE_DIR + moduleName)(path, server);
+
+    if (module) {
+        app.use(path, module);
+    }
 });
 
 // Error Handler

@@ -17,7 +17,7 @@ require.config({
         }
     },
     paths: {
-        'socket.io': '/socket.io/socket.io',
+        'socket.io': '/rt/socket.io',
         underscore: '../bower_components/underscore/underscore',
         moment: '../bower_components/moment/moment',
         q: '../bower_components/q/q',

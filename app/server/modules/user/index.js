@@ -52,6 +52,6 @@ app.get('/login/google', passport.authenticate('google', {
 }));
 
 // Export
-module.exports = function(parentApp, io) {
+module.exports = function(path, server) {
     return app;
 };
