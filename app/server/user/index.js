@@ -1,7 +1,6 @@
-/* jshint node:true */
 'use strict';
 
-var SETTINGS = require('../../config').AUTH;
+var SETTINGS = require('../config').AUTH;
 
 var express = require('express'),
     passport = require('passport'),
@@ -52,6 +51,4 @@ app.get('/login/google', passport.authenticate('google', {
 }));
 
 // Export
-module.exports = function(path, server) {
-    return app;
-};
+module.exports = app;

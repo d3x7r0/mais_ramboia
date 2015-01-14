@@ -1,11 +1,11 @@
 // Config
-var SETTINGS = require('../../../config').AUTH;
+var SETTINGS = require('../../config').AUTH;
 
 // load all the things we need
 var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 
 // load up the user model
-var User = require('./../models/user');
+var User = require('../models/user');
 
 function registerUser(token, refreshToken, profile, done) {
 

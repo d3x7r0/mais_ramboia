@@ -40,6 +40,8 @@ function getModules(DIR) {
     });
 }
 
+app.use(require('./user'));
+
 var MODULE_DIR = './modules/',
     MODULES = getModules(MODULE_DIR);
 
