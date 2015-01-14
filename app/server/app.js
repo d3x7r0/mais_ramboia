@@ -17,13 +17,13 @@ var app = express(),
 // Middleware
 app.use(logfmt.requestLogger());
 app.use(session({
-    secret: SETTINGS.AUTH.SESSION.SECRET,
+    secret: SETTINGS.auth.session.secret,
     resave: true,
     saveUninitialized: true
 }));
 
 // Work with reverse proxies
-app.set('trust proxy', SETTINGS.REVERSE_PROXY_MODE);
+app.set('trust proxy', SETTINGS.reverseProxyMode);
 
 // View engine
 app.set('view engine', 'ejs');
@@ -31,7 +31,7 @@ app.set('views', __dirname + '/views');
 
 // Static files
 // TODO LN: add build steps to build less files, concat and minify css and js
-app.use(express.static(SETTINGS.DIR.CLIENT));
+app.use(express.static(SETTINGS.dir.client));
 
 // Modules
 function getModules(DIR) {
@@ -63,6 +63,6 @@ app.use(errorHandler);
 app.use(errorHandler.notFound);
 
 // Run the server
-server.listen(SETTINGS.PORT, function onServerStarted() {
-    console.log("Server listening on port %d", SETTINGS.PORT);
+server.listen(SETTINGS.port, function onServerStarted() {
+    console.log("Server listening on port %d", SETTINGS.port);
 });

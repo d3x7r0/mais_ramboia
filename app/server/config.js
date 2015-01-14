@@ -4,21 +4,26 @@
 var rc = require('rc');
 
 var DEFAULTS = {
-    PORT: Number(process.env.PORT || 8080),
-    REVERSE_PROXY_MODE: false,
-    DIR: {
-        CLIENT: __dirname + '/../../_public'
+    port: Number(process.env.PORT || 8080),
+    reverseProxyMode: false,
+    dir: {
+        client: __dirname + '/../../_public'
     },
-    AUTH: {
-        SESSION: {
-            SECRET: 'session secret here'
+    auth: {
+        session: {
+            secret: 'session secret here'
         },
-        GOOGLE: {
-            'CLIENT_ID': 'your-secret-clientID-here',
-            'CLIENT_SECRET': 'your-client-secret-here',
+        google: {
+            'clientId': 'your-secret-clientID-here',
+            'clientSecret': 'your-client-secret-here',
             // TODO LN: generate at runtime
-            'CALLBACK_URL': 'http://127.0.0.1:8080/login/google'
+            'callbackUrl': 'http://127.0.0.1:8080/login/google'
         }
+    },
+    db: {
+        // Reference: https://github.com/brianc/node-postgres/wiki/pg
+        database: 'mais_ramboia',
+        host: 'localhost'
     }
 };
 

@@ -1,12 +1,7 @@
 'use strict';
 
-var SETTINGS = require('../config').AUTH;
-
 var express = require('express'),
     passport = require('passport'),
-    cookieParser = require('cookie-parser'),
-    bodyParser = require('body-parser'),
-    session = require('express-session'),
     flash = require('connect-flash');
 
 // Start the app
@@ -16,15 +11,8 @@ var app = express();
 require('./passport/google')(passport); // pass passport for configuration
 
 // Setup middleware
-app.use(cookieParser());
-app.use(bodyParser.urlencoded({
-    extended: true
-}));
-app.use(session({
-    secret: SETTINGS.SESSION.SECRET,
-    resave: true,
-    saveUninitialized: true
-}));
+require('./reader')(app);
+
 app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session());
@@ -40,7 +28,7 @@ app.get('/logout', function (req, res) {
 });
 
 // Google
-app.get('/login', passport.authenticate('google', { scope: ['profile', 'email'] }));
+app.get('/login', passport.authenticate('google', {scope: ['profile', 'email']}));
 
 // the callback after google has authenticated the user
 app.get('/login/google', passport.authenticate('google', {
