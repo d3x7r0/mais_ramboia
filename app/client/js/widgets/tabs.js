@@ -1,7 +1,7 @@
 define(function (require) {
     "use strict";
 
-    var _ = require('underscore'),
+    var _ = require('lodash'),
         $ = require('zepto');
 
     var Tabs = function ($el, opts) {

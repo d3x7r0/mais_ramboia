@@ -14,17 +14,17 @@
     "tests"
   ],
   "dependencies": {
-    "modernizr": "~2.7.2",
-    "pure": "~0.5.0",
-    "fontawesome": "~4.2.0",
-    "requirejs": "~2.1.15",
-    "underscore": "~1.7.0",
-    "q": "~1.x.x",
-    "moment": "~2.8.3",
-    "zepto": "~1.1.4",
-    "pure-extras": "*"
+    "bluebird": "~2.9.34",
+    "fontawesome": "~4.3.0",
+    "lodash": "~3.10.0",
+    "modernizr": "~2.8.3",
+    "moment": "~2.10.3",
+    "pure": "~0.6.0",
+    "pure-extras": "*",
+    "requirejs": "~2.1.19",
+    "zepto": "~1.1.4"
   },
   "resolutions": {
-    "pure": "~0.5.0"
+    "pure": "~0.6.0"
   }
 }

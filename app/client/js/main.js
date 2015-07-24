@@ -2,13 +2,11 @@ define(function (require) {
     'use strict';
 
     // Dependencies
-    var console = require('utils/console'),
-        when = require('promises');
+    var console = require('utils/console');
 
     var io = require('socket.io');
 
-    var _ = require('underscore'),
-        $ = require('zepto');
+    var $ = require('zepto');
 
     // Widgets
     var Tab = require('widgets/tabs'),

@@ -3,8 +3,8 @@ define(function (require) {
     'use strict';
 
     // Dependencies
-    var when = require('promises'),
-        _ = require('underscore');
+    var Promise = require('promises'),
+        _ = require('lodash');
 
     // Constants
     var WIDTH = '640',
@@ -22,7 +22,13 @@ define(function (require) {
     };
 
     // Variables
-    var _loaded = when.defer();
+    // FIXME: deferred anti-pattern
+    var _loaded = {
+        promise: new Promise(function(resolve, reject) {
+            _loaded.resolve = resolve;
+            _loaded.reject = reject;
+        })
+    };
 
     // Load youtube player library
     (function init() {
