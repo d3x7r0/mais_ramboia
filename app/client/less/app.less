@@ -1,4 +1,159 @@
 @import (reference) '_parts/variables';
 @import (reference) '_parts/mixins';
-
 @import '_parts/base';
+
+html, body {
+  background: @backgroundColor;
+  color: @textColor;
+}
+
+a {
+  &,
+  &:link,
+  &:visited {
+    color: @textColor;
+  }
+
+  &:hover,
+  &:active,
+  &:focus {
+    color: mix(@textColor, @highlightColor, 30%)
+  }
+}
+
+.video-container-wrapper {
+  width: 100%;
+  background: black;
+}
+
+.video-container {
+  display: flex;
+  width: 100%;
+  height: 100%;
+
+  .wrapper {
+    position: relative;
+    padding-bottom: 56.25%;
+    height: 0;
+    overflow: hidden;
+    width: 100%;
+    align-self: center;
+  }
+
+  .video-player {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.playlist {
+  padding: 0.3em 0;
+}
+
+.playlist-entry {
+  width: 90%;
+  margin: 0.6em auto;
+  position: relative;
+  padding-bottom: 56.25%;
+  height: 0;
+  overflow: hidden;
+  border: 1px solid @highlightColor;
+
+  &::after {
+    content: ' ';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 1.4em * 1.4;
+    background: fade(@highlightColor, 80%);
+  }
+}
+
+.playlist-entry-background {
+  object-fit: cover;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.playlist-entry-title {
+  font-size: 1.4em;
+  line-height: 1.4;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  white-space: nowrap;
+  pointer-events: none;
+  margin: 0 0.3em;
+  z-index: 1;
+}
+
+
+.application-header {
+  height: 1.5em * 1.3;
+  width: 100%;
+  background: @color4;
+}
+
+.application-title {
+  font-size: 1.5em;
+  line-height: 1.3;
+  margin: 0 0.4em;
+
+  &::first-letter {
+    color: @highlightColor;
+  }
+}
+
+@media screen and (min-width: 600px) and (orientation: landscape) {
+  html, body {
+    height: 100%;
+  }
+
+  body {
+    min-height: 100%;
+  }
+
+  .application-header {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+  }
+
+  .application {
+    display: flex;
+    height: 100%;
+    max-height: 100%;
+    flex-direction: row;
+    overflow: hidden;
+    padding-top: 1.5em * 1.3;
+
+    .video-container,
+    .playlist {
+      flex-grow: 0;
+      flex-shrink: 0;
+    }
+
+    .video-container-wrapper {
+      flex-basis: 75%;
+      height: 100%;
+    }
+
+    .playlist {
+      flex-basis: 25%;
+      height: 100%;
+      overflow-x: hidden;
+      overflow-y: scroll;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+  }
+}
