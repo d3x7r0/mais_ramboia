@@ -62,6 +62,14 @@ module.exports = function (grunt) {
                         dest: '<%= project.pkg.directories.public %>/'
                     }
                 ]
+            },
+            'scripts': {
+                files: [
+                    {
+                        src: "node_modules/babel-polyfill/dist/polyfill.min.js",
+                        dest: "<%= project.pkg.directories.public %>/js/libs/polyfill.min.js"
+                    }
+                ]
             }
         },
 
@@ -94,6 +102,18 @@ module.exports = function (grunt) {
         watch: {
             options: {
                 'interrupt': true
+            },
+            "grunt": {
+                options: {
+                    reload: true
+                },
+                files: [
+                    'Gruntfile.js',
+                    '.babelrc'
+                ],
+                tasks: [
+                    'build'
+                ]
             },
             "styles": {
                 files: ['<%= project.pkg.directories.client %>/less/**/*.less'],
@@ -156,8 +176,8 @@ module.exports = function (grunt) {
                     moduleName: '<%= project.pkg.name %>'
                 },
                 files: [{
-                    'dest': '<%= project.pkg.directories.public %>/js/main.js',
-                    'src': '<%= project.pkg.directories.client %>/js/main.js' // Only one source file is permitted
+                    'src': '<%= project.pkg.directories.client %>/js/main.js', // Only one source file is permitted
+                    'dest': '<%= project.pkg.directories.public %>/js/main.min.js'
                 }]
             }
         }
@@ -171,5 +191,5 @@ module.exports = function (grunt) {
     grunt.registerTask('assets', ['clean:assets', 'copy:assets']);
     grunt.registerTask("styles", ['clean:styles', 'less:styles']);
     // TODO LN: optimize instead of copying scripts
-    grunt.registerTask("scripts", ['clean:scripts', 'eslint:client', 'rollup', 'modernizr']);
+    grunt.registerTask("scripts", ['clean:scripts', 'eslint:client', 'rollup', 'copy:scripts', 'modernizr']);
 };

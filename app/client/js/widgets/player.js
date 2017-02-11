@@ -19,7 +19,7 @@ const PLAYER_SETTINGS = {
     playsinline: 1
 };
 
-// Variables
+// Globals
 const _loaded = new Promise(resolve => {
     window.onYouTubeIframeAPIReady = () => {
         resolve();
@@ -33,195 +33,194 @@ const _loaded = new Promise(resolve => {
     );
 });
 
-// Player
-function Player(selector) {
-
-    this._$el = DOM.find(selector).pop();
-
-    const id = this._$el.getAttribute('id') || _generateId();
-    this._$el.setAttribute('id', id);
-
-    this._load = this._load.bind(this);
-
-    const options = {
-        height: HEIGHT,
-        width: WIDTH,
-        videoId: '',
-        playerVars: PLAYER_SETTINGS,
-        events: {
-            'onStateChange': e => {
-                let isProtected = this._protectPlayer(e.data);
-
-                if (!isProtected) {
-                    this._triggerEvents(e.data);
-                }
-            }
-        }
-    };
-
-    this._ready = _loaded
-        .then(() => _buildPlayer(id, options))
-        .then(player => {
-            this._player = player;
-
-            DOM.trigger(this._$el, 'player:ready');
-
-            return player;
-        });
-}
-
-Player.prototype.on = function (eventName, eventHandler) {
-    this._$el.addEventListener(eventName, eventHandler);
-
-    return this;
-};
-
-Player.prototype.off = function (eventName, eventHandler) {
-    this._$el.removeEventListener(eventName, eventHandler);
-
-    return this;
-};
-
-Player.prototype.toggleMute = function () {
-    return this._ready.then(player => {
-        let muted = player.isMuted();
-
-        if (muted) {
-            player.unMute();
-        } else {
-            player.mute();
-        }
-
-        return {
-            muted: !muted
-        };
-    });
-};
-
-Player.prototype.mute = function () {
-    return this._ready.then(player => {
-        player.mute();
-
-        return {
-            muted: true
-        };
-    });
-};
-
-Player.prototype.unMute = function () {
-    return this._ready.then(player => {
-        player.unMute();
-
-        return {
-            muted: false
-        };
-    });
-};
-
-Player.prototype.isMuted = function () {
-    return this._ready.then(player => ({
-        muted: player.isMuted()
-    }));
-};
-
-Player.prototype.getTime = function () {
-    return this._ready.then(player => ({
-        total: player.getDuration(),
-        elapsed: player.getCurrentTime()
-    }));
-};
-
-Player.prototype.stop = function () {
-    return this._ready.then(player => {
-        self._locked = true;
-
-        player.stopVideo();
-
-        return true;
-    });
-};
-
-Player.prototype.play = function (id, offset) {
-    return this._ready.then(player => {
-        this._locked = false;
-
-        return this._load(player, id, offset);
-    });
-};
-
-Player.prototype._load = function (_player, id, offset) {
-    return new Promise(resolve => {
-        const fn = () => {
-            this.off('player:playing', fn);
-            resolve(_player);
-        };
-
-        this.on('player:playing', fn);
-
-        _player.loadVideoById(id, offset);
-    });
-};
-
-// Private functions
 let COUNTER = 0;
 
-function _generateId() {
-    return '#player_' + (COUNTER++);
-}
+// Player
+export default class Player {
+    constructor(selector) {
+        this._$el = DOM.find(selector).pop();
 
-Player.prototype._protectPlayer = function _protectPlayer(state) {
-    let isProtected = false;
+        const id = this._$el.getAttribute('id') || Player._generateID();
+        this._$el.setAttribute('id', id);
 
-    if (state === YT.PlayerState.PAUSED) {
-        let isFinished = this._player.getCurrentTime() === this._player.getDuration();
+        this._load = this._load.bind(this);
 
-        if (this._locked) {
-            this._player.stopVideo();
-            isProtected = true;
-        } else if (isFinished) {
-            this._locked = true;
-        } else {
-            // Computer says NO! (prevent users from pausing the video)
-            this._player.playVideo();
-            isProtected = true;
-        }
-    }
+        const options = {
+            height: HEIGHT,
+            width: WIDTH,
+            videoId: '',
+            playerVars: PLAYER_SETTINGS,
+            events: {
+                'onStateChange': e => {
+                    let isProtected = this._protectPlayer(e.data);
 
-    if (state === YT.PlayerState.PLAYING && this._locked) {
-        this._player.stopVideo();
-        isProtected = true;
-    }
-
-    return isProtected;
-};
-
-Player.prototype._triggerEvents = function _triggerEvents(state) {
-    switch (state) {
-        case YT.PlayerState.ENDED:
-        case YT.PlayerState.PAUSED:
-            DOM.trigger(this._$el, 'player:stopped', {state: state});
-            break;
-        case YT.PlayerState.PLAYING:
-            DOM.trigger(this._$el, 'player:playing', {state: state});
-            break;
-    }
-
-    DOM.trigger(this._$el, 'player:statechange', {state: state});
-};
-
-function _buildPlayer(id, options) {
-    return new Promise(resolve => {
-        let player;
-
-        options = options || {};
-        options['events'] = options['events'] || {};
-
-        options['events']['onReady'] = function () {
-            resolve(player);
+                    if (!isProtected) {
+                        this._triggerEvents(e.data);
+                    }
+                }
+            }
         };
 
-        player = new YT.Player(id, options);
-    });
-}
+        this._ready = _loaded
+            .then(() => Player._build(id, options))
+            .then(player => {
+                this._player = player;
 
-export default Player;
+                DOM.trigger(this._$el, 'player:ready');
+
+                return player;
+            });
+    }
+
+    on(eventName, eventHandler) {
+        this._$el.addEventListener(eventName, eventHandler);
+
+        return this;
+    }
+
+    off(eventName, eventHandler) {
+        this._$el.removeEventListener(eventName, eventHandler);
+
+        return this;
+    }
+
+    toggleMute() {
+        return this._ready.then(player => {
+            let muted = player.isMuted();
+
+            if (muted) {
+                player.unMute();
+            } else {
+                player.mute();
+            }
+
+            return {
+                muted: !muted
+            };
+        });
+    }
+
+    mute() {
+        return this._ready.then(player => {
+            player.mute();
+
+            return {
+                muted: true
+            };
+        });
+    }
+
+    unMute() {
+        return this._ready.then(player => {
+            player.unMute();
+
+            return {
+                muted: false
+            };
+        });
+    }
+
+    isMuted() {
+        return this._ready.then(player => ({
+            muted: player.isMuted()
+        }));
+    }
+
+    getTime() {
+        return this._ready.then(player => ({
+            total: player.getDuration(),
+            elapsed: player.getCurrentTime()
+        }));
+    }
+
+    stop() {
+        return this._ready.then(player => {
+            self._locked = true;
+
+            player.stopVideo();
+
+            return true;
+        });
+    }
+
+    play(id, offset) {
+        return this._ready.then(player => {
+            this._locked = false;
+
+            return this._load(player, id, offset);
+        });
+    }
+
+    _load(_player, id, offset) {
+        return new Promise(resolve => {
+            const fn = () => {
+                this.off('player:playing', fn);
+                resolve(_player);
+            };
+
+            this.on('player:playing', fn);
+
+            _player.loadVideoById(id, offset);
+        });
+    }
+
+
+    _protectPlayer(state) {
+        let isProtected = false;
+
+        if (state === YT.PlayerState.PAUSED) {
+            let isFinished = this._player.getCurrentTime() === this._player.getDuration();
+
+            if (this._locked) {
+                this._player.stopVideo();
+                isProtected = true;
+            } else if (isFinished) {
+                this._locked = true;
+            } else {
+                // Computer says NO! (prevent users from pausing the video)
+                this._player.playVideo();
+                isProtected = true;
+            }
+        }
+
+        if (state === YT.PlayerState.PLAYING && this._locked) {
+            this._player.stopVideo();
+            isProtected = true;
+        }
+
+        return isProtected;
+    }
+
+    _triggerEvents(state) {
+        switch (state) {
+            case YT.PlayerState.ENDED:
+            case YT.PlayerState.PAUSED:
+                DOM.trigger(this._$el, 'player:stopped', {state: state});
+                break;
+            case YT.PlayerState.PLAYING:
+                DOM.trigger(this._$el, 'player:playing', {state: state});
+                break;
+        }
+
+        DOM.trigger(this._$el, 'player:statechange', {state: state});
+    }
+
+    static _generateID() {
+        return '#player_' + (COUNTER++);
+    }
+
+    static _build(id, options) {
+        return new Promise(resolve => {
+            let player;
+
+            options = Object.assign({}, options || {});
+            options['events'] = options['events'] || {};
+
+            options['events']['onReady'] = function () {
+                resolve(player);
+            };
+
+            player = new YT.Player(id, options);
+        });
+    }
+}
