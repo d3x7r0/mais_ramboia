@@ -1,230 +1,227 @@
 /* global YT: false */
-define(function (require) {
-    'use strict';
+'use strict';
+// Dependencies
+import Promise from "bluebird";
+import DOM from "../utils/dom";
 
-    // Dependencies
-    var Promise = require('promises'),
-        _ = require('lodash');
+// Constants
+const WIDTH = '640',
+    HEIGHT = '390';
 
-    // Constants
-    var WIDTH = '640',
-        HEIGHT = '390';
+const PLAYER_SETTINGS = {
+    controls: 0,
+    disablekb: 1,
+    iv_load_policy: 3,
+    modestbranding: 1,
+    rel: 0,
+    showinfo: 0,
+    origin: window.location.hostname,
+    playsinline: 1
+};
 
-    var PLAYER_SETTINGS = {
-        controls: 0,
-        disablekb: 1,
-        iv_load_policy: 3,
-        modestbranding: 1,
-        rel: 0,
-        showinfo: 0,
-        origin: window.location.hostname,
-        playsinline: 1
+// Variables
+const _loaded = new Promise(resolve => {
+    window.onYouTubeIframeAPIReady = () => {
+        resolve();
     };
 
-    // Variables
-    // FIXME: deferred anti-pattern
-    var _loaded = {
-        promise: new Promise(function(resolve, reject) {
-            _loaded.resolve = resolve;
-            _loaded.reject = reject;
-        })
-    };
+    DOM.loadScript("https://www.youtube.com/iframe_api").then(
+        () => console.debug("Youtube script loaded"),
+        err => {
+            throw err;
+        }
+    );
+});
 
-    // Load youtube player library
-    (function init() {
-        var tag = document.createElement('script');
-        tag.src = "https://www.youtube.com/iframe_api";
+// Player
+function Player(selector) {
 
-        var firstScriptTag = document.getElementsByTagName('script')[0];
-        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-    })();
+    this._$el = DOM.find(selector).pop();
 
-    window.onYouTubeIframeAPIReady = function () {
-        _loaded.resolve();
-    };
+    const id = this._$el.getAttribute('id') || _generateId();
+    this._$el.setAttribute('id', id);
 
-    // Player
-    function Player($el) {
-        var self = this;
+    this._load = this._load.bind(this);
 
-        this._$el = $($el);
+    const options = {
+        height: HEIGHT,
+        width: WIDTH,
+        videoId: '',
+        playerVars: PLAYER_SETTINGS,
+        events: {
+            'onStateChange': e => {
+                let isProtected = this._protectPlayer(e.data);
 
-        var id = this._$el.attr('id') || _generateId();
-        this._$el.attr('id', id);
-
-        this._load = _.bind(this._load, this);
-
-        var _deferred = when.defer();
-        this._ready = _deferred.promise;
-
-        _loaded.promise.then(function () {
-            self._player = new YT.Player(id, {
-                height: HEIGHT,
-                width: WIDTH,
-                videoId: '',
-                playerVars: PLAYER_SETTINGS,
-                events: {
-                    'onReady': function onPlayerReady() {
-                        _deferred.resolve(self._player);
-                        self._$el.trigger('player:ready');
-                    },
-                    'onStateChange': function (e) {
-                        var isProtected = _protectPlayer.call(self, e.data);
-
-                        if (!isProtected) {
-                            _triggerEvents.call(self, e.data);
-                        }
-                    }
+                if (!isProtected) {
+                    this._triggerEvents(e.data);
                 }
-            });
-        });
-    }
-
-    Player.prototype.on = function () {
-        this._$el.on.apply(this, arguments);
-
-        return this;
-    };
-
-    Player.prototype.off = function () {
-        this._$el.off.apply(this, arguments);
-
-        return this;
-    };
-
-    Player.prototype.toggleMute = function () {
-        return this._ready.then(function (_player) {
-            var muted = _player.isMuted();
-
-            if (muted) {
-                _player.unMute();
-            } else {
-                _player.mute();
             }
-
-            return {
-                muted: !muted
-            };
-        });
+        }
     };
 
-    Player.prototype.mute = function () {
-        return this._ready.then(function (_player) {
-            _player.mute();
+    this._ready = _loaded
+        .then(() => _buildPlayer(id, options))
+        .then(player => {
+            this._player = player;
 
-            return {
-                muted: true
-            };
+            DOM.trigger(this._$el, 'player:ready');
+
+            return player;
         });
-    };
+}
 
-    Player.prototype.unMute = function () {
-        return this._ready.then(function (_player) {
-            _player.unMute();
+Player.prototype.on = function (eventName, eventHandler) {
+    this._$el.addEventListener(eventName, eventHandler);
 
-            return {
-                muted: false
-            };
-        });
-    };
+    return this;
+};
 
-    Player.prototype.isMuted = function () {
-        return this._ready.then(function (_player) {
-            return {
-                muted: _player.isMuted()
-            };
-        });
-    };
+Player.prototype.off = function (eventName, eventHandler) {
+    this._$el.removeEventListener(eventName, eventHandler);
 
-    Player.prototype.getTime = function () {
-        return this._ready.then(function (_player) {
-            return {
-                total: _player.getDuration(),
-                elapsed: _player.getCurrentTime()
-            };
-        });
-    };
+    return this;
+};
 
-    Player.prototype.stop = function () {
-        return this._ready.then(function (_player) {
-            self._locked = true;
+Player.prototype.toggleMute = function () {
+    return this._ready.then(player => {
+        let muted = player.isMuted();
 
-            _player.stopVideo();
+        if (muted) {
+            player.unMute();
+        } else {
+            player.mute();
+        }
 
-            return true;
-        });
-    };
+        return {
+            muted: !muted
+        };
+    });
+};
 
-    Player.prototype.play = function (id, offset) {
-        var self = this;
+Player.prototype.mute = function () {
+    return this._ready.then(player => {
+        player.mute();
 
-        var _load = this._load;
+        return {
+            muted: true
+        };
+    });
+};
 
-        return this._ready.then(function (_player) {
-            self._locked = false;
+Player.prototype.unMute = function () {
+    return this._ready.then(player => {
+        player.unMute();
 
-            return _load(_player, id, offset);
-        });
-    };
+        return {
+            muted: false
+        };
+    });
+};
 
-    Player.prototype._load = function (_player, id, offset) {
-        var deferred = when.defer();
+Player.prototype.isMuted = function () {
+    return this._ready.then(player => ({
+        muted: player.isMuted()
+    }));
+};
 
-        this._$el.one('player:playing', function () {
-            deferred.resolve(_player);
-        });
+Player.prototype.getTime = function () {
+    return this._ready.then(player => ({
+        total: player.getDuration(),
+        elapsed: player.getCurrentTime()
+    }));
+};
+
+Player.prototype.stop = function () {
+    return this._ready.then(player => {
+        self._locked = true;
+
+        player.stopVideo();
+
+        return true;
+    });
+};
+
+Player.prototype.play = function (id, offset) {
+    return this._ready.then(player => {
+        this._locked = false;
+
+        return this._load(player, id, offset);
+    });
+};
+
+Player.prototype._load = function (_player, id, offset) {
+    return new Promise(resolve => {
+        const fn = () => {
+            this.off('player:playing', fn);
+            resolve(_player);
+        };
+
+        this.on('player:playing', fn);
 
         _player.loadVideoById(id, offset);
+    });
+};
 
-        return deferred.promise;
-    };
+// Private functions
+let COUNTER = 0;
 
-    // Private functions
-    var COUNTER = 0;
+function _generateId() {
+    return '#player_' + (COUNTER++);
+}
 
-    function _generateId() {
-        return '#player_' + (COUNTER++);
-    }
+Player.prototype._protectPlayer = function _protectPlayer(state) {
+    let isProtected = false;
 
-    var _protectPlayer = function _protectPlayer(state) {
-        var isProtected = false;
+    if (state === YT.PlayerState.PAUSED) {
+        let isFinished = this._player.getCurrentTime() === this._player.getDuration();
 
-        if (state === YT.PlayerState.PAUSED) {
-            var isFinished = this._player.getCurrentTime() === this._player.getDuration();
-
-            if (this._locked) {
-                this._player.stopVideo();
-                isProtected = true;
-            } else if (isFinished) {
-                this._locked = true;
-            } else {
-                // Computer says NO! (prevent users from pausing the video)
-                this._player.playVideo();
-                isProtected = true;
-            }
-        }
-
-        if (state === YT.PlayerState.PLAYING && this._locked) {
+        if (this._locked) {
             this._player.stopVideo();
             isProtected = true;
+        } else if (isFinished) {
+            this._locked = true;
+        } else {
+            // Computer says NO! (prevent users from pausing the video)
+            this._player.playVideo();
+            isProtected = true;
         }
+    }
 
-        return isProtected;
-    };
+    if (state === YT.PlayerState.PLAYING && this._locked) {
+        this._player.stopVideo();
+        isProtected = true;
+    }
 
-    var _triggerEvents = function _triggerEvents(state) {
-        switch (state) {
-            case YT.PlayerState.ENDED:
-            case YT.PlayerState.PAUSED:
-                this._$el.trigger('player:stopped', [ state ]);
-                break;
-            case YT.PlayerState.PLAYING:
-                this._$el.trigger('player:playing', [ state ]);
-                break;
-        }
+    return isProtected;
+};
 
-        this._$el.trigger('player:statechange', [ state ]);
-    };
+Player.prototype._triggerEvents = function _triggerEvents(state) {
+    switch (state) {
+        case YT.PlayerState.ENDED:
+        case YT.PlayerState.PAUSED:
+            DOM.trigger(this._$el, 'player:stopped', {state: state});
+            break;
+        case YT.PlayerState.PLAYING:
+            DOM.trigger(this._$el, 'player:playing', {state: state});
+            break;
+    }
 
-    return Player;
-});
+    DOM.trigger(this._$el, 'player:statechange', {state: state});
+};
+
+function _buildPlayer(id, options) {
+    return new Promise(resolve => {
+        let player;
+
+        options = options || {};
+        options['events'] = options['events'] || {};
+
+        options['events']['onReady'] = function () {
+            resolve(player);
+        };
+
+        player = new YT.Player(id, options);
+    });
+}
+
+export default Player;

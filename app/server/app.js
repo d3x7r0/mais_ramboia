@@ -1,4 +1,3 @@
-/* jshint node:true */
 'use strict';
 
 var SETTINGS = require(__dirname + '/config');
@@ -8,53 +7,30 @@ var fs = require('fs');
 var express = require('express'),
     http = require('http');
 
-var logfmt = require('logfmt'),
-    session = require('express-session');
+var logfmt = require('logfmt');
 
 var app = express(),
-    server = http.Server(app);
+    server = http.Server(app),
+    io = require('socket.io')(server);
 
 // Middleware
 app.use(logfmt.requestLogger());
-app.use(session({
-    secret: SETTINGS.auth.session.secret,
-    resave: true,
-    saveUninitialized: true
-}));
 
 // Work with reverse proxies
 app.set('trust proxy', SETTINGS.reverseProxyMode);
-
-// View engine
-app.set('view engine', 'ejs');
-app.set('views', __dirname + '/views');
 
 // Static files
 // TODO LN: add build steps to build less files, concat and minify css and js
 app.use(express.static(SETTINGS.dir.client));
 
-// Modules
-function getModules(DIR) {
-    return fs.readdirSync(DIR).filter(function (entry) {
-        return fs.statSync(DIR + '/' + entry).isDirectory();
-    });
-}
+// Routes
+app.get('/test', function (req, res) {
+    res.status(200).send("Hello World");
+});
 
-app.use(require('./user'));
-
-var MODULE_DIR = './modules/',
-    MODULES = getModules(MODULE_DIR);
-
-MODULES.forEach(function loadModule(moduleName) {
-    var path,module;
-
-    path = '/' + moduleName;
-
-    module = require(MODULE_DIR + moduleName)(path, server);
-
-    if (module) {
-        app.use(path, module);
-    }
+// Socket.IO
+io.on('connection', function(socket){
+    console.log('a user connected');
 });
 
 // Error Handler

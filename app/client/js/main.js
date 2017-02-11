@@ -1,58 +1,44 @@
-define(function (require) {
-    'use strict';
+'use strict';
+// Dependencies
+import {ready, loadScript} from "./utils/dom";
+import Player from "./widgets/player";
 
-    // Dependencies
-    var console = require('utils/console');
+let player;
 
-    var io = require('socket.io');
+// Private methods
+function init() {
+    player = new Player('#player');
 
-    var $ = require('zepto');
+    player.play('dQw4w9WgXcQ', 180).then(function () {
+        console.log("Playing");
+    });
 
-    // Widgets
-    var Tab = require('widgets/tabs'),
-        Player = require('widgets/player');
+    // TODO: remove me
+    player.mute();
+    window.player = player;
 
-    // Public methods
-    function start() {
-        $(_init);
-    }
+    loadScript("/socket.io/socket.io.js").then(
+        () => {
+            const socket = window.io.connect('/');
 
-    var _player;
+            socket.on('connect', function () {
+                console.log("Connected");
+            });
+        },
+        err => console.error("Failed to load socket.io", err)
+    );
+}
 
-    // Private methods
-    function _init() {
-        $('.js-tab-container').forEach(function (entry) {
-            new Tab(entry);
-        });
+// Public methods
+export function start() {
+    ready(init);
+}
 
-        _player = new Player('#player');
+export function getPlayer() {
+    return player;
+}
 
-        _player.play('dQw4w9WgXcQ', 180).then(function() {
-            console.log("Playing");
-        });
-        _player.mute();
-
-        var socket = io.connect('/', {
-            path: '/rt'
-        });
-
-        socket.on('connect', function() {
-            console.log("Connected");
-        });
-    }
-
-    function _delta(startTime) {
-        return Math.round((startTime - _now()) / 1000);
-    }
-
-    function _now() {
-        return window.performance.timing.navigationStart + window.performance.now();
-    }
-
-    return {
-        start: start,
-        _getPlayer: function () {
-            return _player;
-        }
-    };
-});
+export default {
+    start: start,
+    getPlayer: getPlayer
+};

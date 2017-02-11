@@ -1,50 +1,45 @@
 {
   "name": "mais_ramboia",
-  "version": "0.0.4",
-  "description": "Distributed youtube playlists",
+  "version": "2.0.0",
+  "description": "Slack-powered youtube playlists",
+  "author": "Luis Nabais",
   "main": "app.js",
   "license": "MIT",
   "scripts": {
-    "test": "grunt jshint:server && vows --spec",
-    "postinstall": "./node_modules/bower/bin/bower install",
+    "test": "grunt eslint:server && vows --spec",
     "start": "node app/server/app.js"
   },
   "dependencies": {
-    "ejs": "^2.3.3",
-    "express": "~4.13.1",
+    "bluebird": "^3.4.7",
     "body-parser": "^1.9.0",
-    "bower": "^1.3.3",
-    "connect-flash": "^0.1.1",
-    "cookie-parser": "^1.3.3",
-    "express-session": "^1.8.2",
+    "express": "^4.14.1",
     "logfmt": "^1.1.2",
-    "nano": "^6.0.2",
-    "passport": "^0.2.1",
-    "passport-google-oauth": "^0.2.0",
-    "pg": "^4.2.0",
     "rc": "^1.0.3",
-    "socket.io": "^1.1.0",
-    "squel": "^4.0.0"
+    "socket.io": "^1.1.0"
   },
   "devDependencies": {
-    "grunt": "^0.4.5",
-    "grunt-autoprefixer": "^3.0.3",
-    "grunt-bower-requirejs": "^2.0.0",
-    "grunt-contrib-clean": "^0.6.0",
-    "grunt-contrib-copy": "^0.8.0",
-    "grunt-contrib-cssmin": "^0.12.3",
-    "grunt-contrib-jshint": "^0.11.2",
-    "grunt-contrib-jst": "^0.6.0",
-    "grunt-contrib-less": "^1.0.1",
-    "grunt-contrib-watch": "^0.6.1",
+    "babel-preset-es2015-rollup": "^3.0.0",
+    "grunt": "^1.0.1",
+    "grunt-contrib-clean": "^1.0.0",
+    "grunt-contrib-copy": "^1.0.0",
+    "grunt-contrib-less": "^1.2.0",
+    "grunt-contrib-uglify": "^2.1.0",
+    "grunt-contrib-watch": "^1.0.0",
+    "grunt-eslint": "^19.0.0",
+    "grunt-modernizr": "^1.0.2",
+    "grunt-rollup": "^1.0.1",
     "horaa": "^0.1.2-alpha",
-    "load-grunt-config": "^0.17.2",
-    "load-grunt-tasks": "^3.2.0",
+    "less-plugin-autoprefix": "^1.3.0",
+    "less-plugin-clean-css": "^1.4.0",
+    "load-grunt-tasks": "^3.4.1",
     "nodemock": "^0.3.3",
+    "normalize.css": "^5.0.0",
+    "rollup-plugin-babel": "^2.7.1",
+    "rollup-plugin-commonjs": "^7.0.0",
+    "rollup-plugin-node-resolve": "^2.0.0",
+    "rollup-plugin-uglify": "^1.0.1",
     "vows": "^0.8.1"
   },
-  "author": "Luis Nabais",
-  "licenses": "MIT",
   "repository": {
     "type": "git",
     "url": "https://github.com/d3x7r0/mais_ramboia.git"
@@ -53,8 +48,9 @@
     "url": "https://github.com/d3x7r0/mais_ramboia/issues"
   },
   "engines": {
-    "node": "0.10.x",
-    "npm": "1.4.x"
+    "node": "~6.9.0",
+    "npm": "~3.10.0",
+    "yarn": "~0.19.1"
   },
   "directories": {
     "client": "app/client",

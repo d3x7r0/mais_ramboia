@@ -1,0 +1,17 @@
+{
+  "env": {
+    "es6": true,
+    "node": true
+  },
+  "extends": "eslint:recommended",
+  "rules": {
+    "semi": [
+      "warn",
+      "always"
+    ],
+    "no-console": 0,
+    "no-unused-vars": [
+      "warn"
+    ]
+  }
+}
