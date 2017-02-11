@@ -8,6 +8,11 @@ var DEFAULTS = {
     reverseProxyMode: false,
     dir: {
         client: __dirname + '/../../_public'
+    },
+    slack: {
+        token: undefined,
+        channel_id: undefined,
+        channel_name: undefined
     }
 };
 

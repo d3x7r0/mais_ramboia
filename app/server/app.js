@@ -7,6 +7,8 @@ var fs = require('fs');
 var express = require('express'),
     http = require('http');
 
+var bodyParser = require('body-parser');
+
 var logfmt = require('logfmt');
 
 var app = express(),
@@ -15,6 +17,7 @@ var app = express(),
 
 // Middleware
 app.use(logfmt.requestLogger());
+app.use(bodyParser.urlencoded({extended: false}));
 
 // Work with reverse proxies
 app.set('trust proxy', SETTINGS.reverseProxyMode);
@@ -24,12 +27,19 @@ app.set('trust proxy', SETTINGS.reverseProxyMode);
 app.use(express.static(SETTINGS.dir.client));
 
 // Routes
-app.get('/test', function (req, res) {
-    res.status(200).send("Hello World");
-});
+var commands = require('./commands');
+
+app.post('/submit',
+    require('./input-validator')(SETTINGS),
+    function (req, res) {
+        const output = commands.process(req.body);
+
+        res.send(output);
+    });
+
 
 // Socket.IO
-io.on('connection', function(socket){
+io.on('connection', function (socket) {
     console.log('a user connected');
 });
 
