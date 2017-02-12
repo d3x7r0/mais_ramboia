@@ -9,7 +9,7 @@ const PROVIDERS = [
 
 const Playlist = require('./playlist');
 
-function start(server, options) {
+function start(app, options) {
     // Init the bot controller
     const controller = Botkit.slackbot({
         stats_optout: true,
@@ -35,7 +35,7 @@ function start(server, options) {
     // Setup webhook endpoints
     // controller.config.hostname = options.hostname;
     // controller.config.port = options.port;
-    // controller.createWebhookEndpoints(server);
+    // controller.createWebhookEndpoints(app);
 
     const url = `http://${options.hostname}${options.port !== 80 ? ":" + options.port : ""}` + (options.path || "");
 
@@ -107,9 +107,10 @@ function start(server, options) {
     controller.on('rtm_reconnect_failed', function () {
         StatusHandler.setHealthy(false);
         console.error("Reconnection to slack failed");
-    })
-}
+    });
 
+    return controller;
+}
 
 module.exports = {
     start: start

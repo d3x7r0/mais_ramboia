@@ -8,9 +8,13 @@ function getStatus() {
 
     return {
         isHealthy: HEALTHY,
-        playlist: {
-            current: pl.getCurrent(),
-            entries: pl.getEntries()
+        uptime: process.uptime(),
+        details: {
+            serverTime: +new Date(),
+            playlist: {
+                current: pl.getCurrent(),
+                entries: pl.getEntries()
+            }
         }
     }
 }

@@ -191,5 +191,5 @@ module.exports = function (grunt) {
     grunt.registerTask('assets', ['clean:assets', 'copy:assets']);
     grunt.registerTask("styles", ['clean:styles', 'less:styles']);
     // TODO LN: optimize instead of copying scripts
-    grunt.registerTask("scripts", ['clean:scripts', 'eslint:client', 'rollup', 'copy:scripts', 'modernizr']);
+    grunt.registerTask("scripts", ['clean:scripts', 'eslint:client', 'copy:scripts', 'modernizr', 'rollup']);
 };

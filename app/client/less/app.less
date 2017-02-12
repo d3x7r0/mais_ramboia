@@ -61,6 +61,7 @@ a {
   height: 0;
   overflow: hidden;
   border: 1px solid @highlightColor;
+  opacity: 0.6;
 
   &::after {
     content: ' ';
@@ -71,6 +72,10 @@ a {
     height: 1.4em * 1.4;
     background: fade(@highlightColor, 80%);
   }
+}
+
+.playlist-entry:first-child {
+  opacity: 1;
 }
 
 .playlist-entry-background {
@@ -93,7 +98,6 @@ a {
   margin: 0 0.3em;
   z-index: 1;
 }
-
 
 .application-header {
   height: 1.5em * 1.3;

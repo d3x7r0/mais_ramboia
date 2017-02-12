@@ -2,18 +2,15 @@
 
 const SETTINGS = require(__dirname + '/config');
 
-const express = require('express'),
-    http = require('http'),
-    bodyParser = require('body-parser'),
-    logfmt = require('logfmt');
+const express = require('express');
 
-const app = express(),
-    server = http.Server(app),
-    io = require('socket.io')(server);
+const app = express();
+
+const server = require('http').Server(app);
 
 // Middleware
-app.use(logfmt.requestLogger());
-app.use(bodyParser.urlencoded({extended: true}));
+app.use(require('logfmt').requestLogger());
+app.use(require('body-parser').urlencoded({extended: true}));
 
 // Work with reverse proxies
 app.set('trust proxy', SETTINGS.reverseProxyMode);
@@ -22,22 +19,12 @@ app.set('trust proxy', SETTINGS.reverseProxyMode);
 app.use(express.static(SETTINGS.dir.client));
 
 // Routes
-const statusHandler = require('./statusHandler');
-
-app.get('/status', function (req, res) {
-    const status = statusHandler.getStatus();
-
-    if (status.isHealthy) {
-        res.status(200).send(status);
-    } else {
-        res.status(500).send(status);
-    }
-});
+const rest = require('./components/rest');
+rest.start(app, SETTINGS);
 
 // Socket.IO
-io.on('connection', function (socket) {
-    console.log('a user connected');
-});
+const io = require('./components/comms');
+io.start(server, SETTINGS);
 
 // Slack bot
 const bot = require('./components/slack');
