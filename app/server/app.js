@@ -1,50 +1,50 @@
 'use strict';
 
-var SETTINGS = require(__dirname + '/config');
+const SETTINGS = require(__dirname + '/config');
 
-var fs = require('fs');
+const express = require('express'),
+    http = require('http'),
+    bodyParser = require('body-parser'),
+    logfmt = require('logfmt');
 
-var express = require('express'),
-    http = require('http');
-
-var bodyParser = require('body-parser');
-
-var logfmt = require('logfmt');
-
-var app = express(),
+const app = express(),
     server = http.Server(app),
     io = require('socket.io')(server);
 
 // Middleware
 app.use(logfmt.requestLogger());
-app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.urlencoded({extended: true}));
 
 // Work with reverse proxies
 app.set('trust proxy', SETTINGS.reverseProxyMode);
 
 // Static files
-// TODO LN: add build steps to build less files, concat and minify css and js
 app.use(express.static(SETTINGS.dir.client));
 
 // Routes
-var commands = require('./commands');
+const statusHandler = require('./statusHandler');
 
-app.post('/submit',
-    require('./input-validator')(SETTINGS),
-    function (req, res) {
-        const output = commands.process(req.body);
+app.get('/status', function (req, res) {
+    const status = statusHandler.getStatus();
 
-        res.send(output);
-    });
-
+    if (status.isHealthy) {
+        res.status(200).send(status);
+    } else {
+        res.status(500).send(status);
+    }
+});
 
 // Socket.IO
 io.on('connection', function (socket) {
     console.log('a user connected');
 });
 
+// Slack bot
+const bot = require('./components/slack');
+bot.start(app, SETTINGS);
+
 // Error Handler
-var errorHandler = require('./errorHandler');
+const errorHandler = require('./errorHandler');
 app.use(errorHandler);
 app.use(errorHandler.notFound);
 

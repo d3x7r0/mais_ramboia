@@ -4,6 +4,7 @@
 const rc = require('rc');
 
 const DEFAULTS = {
+    hostname: "0.0.0.0",
     port: Number(process.env.PORT || 8080),
     reverseProxyMode: false,
     dir: {
@@ -16,6 +17,9 @@ const DEFAULTS = {
     },
     youtube: {
         key: undefined
+    },
+    playlist: {
+        minDuration: 0
     }
 };
 

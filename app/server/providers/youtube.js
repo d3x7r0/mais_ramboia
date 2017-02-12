@@ -2,20 +2,15 @@ const SETTINGS = require('../config');
 
 const fetch = require('../utils/fetch');
 
-const YOUTUBE_URL_REGEX = /(?:https?:\/\/|www\.|m\.|^)youtu(?:be\.com(?:\/embed)?\/watch\?(?:.*?&(?:amp;)?)?v=|\.be\/)([\w‌​\-]+)(?:&(?:amp;)?[\w\?=]*)?/;
+const YOUTUBE_URL_REGEX = /(?:https?:\/\/|www\.|m\.|^)youtu(?:be\.com(?:\/embed)?\/watch\?(?:.*?&(?:amp;)?)?v=|\.be\/)([\w‌​\-]+)(?:&(?:amp;)?[\w?=]*)?/;
 const ISO8601_DURATION_REGEX = /PT(\d+H)?(\d+M)?(\d+S)?/;
 
 const API_URL_GET_DETAILS = (id) => `https://www.googleapis.com/youtube/v3/videos?key=${SETTINGS['youtube']['key']}&id=${id}&part=snippet,contentDetails`;
 
-
-function canProcess(text) {
-    return getVideoID(text) !== undefined;
-}
+const NAME = "youtube";
 
 function process(payload) {
     const videoID = getVideoID(payload.text);
-
-    console.info(`User ${payload.user_id} added video with ID: ${videoID}`);
 
     return fetchVideoDetails(videoID)
         .then(parseVideoDetails);
@@ -46,6 +41,7 @@ function fetchVideoDetails(id) {
 function parseVideoDetails(data) {
     return {
         id: data.id,
+        provider: NAME,
         isLive: data.snippet.liveBroadcastContent !== "none",
         title: data.snippet.title || "",
         description: data.snippet.description || "",
@@ -84,6 +80,7 @@ function parseVideoDuration(duration) {
 }
 
 module.exports = {
-    canProcess: canProcess,
+    NAME : NAME,
+    PATTERN: YOUTUBE_URL_REGEX,
     process: process
 };
