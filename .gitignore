@@ -5,3 +5,4 @@ bower_components
 _public
 *.iml
 npm-debug.log*
+.elasticbeanstalk
