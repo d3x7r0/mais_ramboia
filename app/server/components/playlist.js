@@ -13,6 +13,7 @@ class Playlist extends EventEmitter {
         this.id = id;
 
         this.entries = [];
+        this.votes = [];
         this.currentEntry = undefined;
         this.timer = undefined;
     }
@@ -52,6 +53,32 @@ class Playlist extends EventEmitter {
         return true;
     }
 
+    voteToSkip(userID) {
+        if (!this.currentEntry) {
+            return false;
+        }
+
+        if (this.votes.indexOf(userID) === -1) {
+            this.votes.push(userID);
+
+            console.info("User %s voted to skip the current video", userID, this.currentEntry);
+
+            this.tallyVotes();
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    tallyVotes() {
+        if (this.votes.length >= SETTINGS['playlist']['votes']) {
+            console.info("Users have voted to skip", this.votes);
+
+            this.notifyVideoSkipped(this.currentEntry, this.votes);
+            this.nextVideo();
+        }
+    }
+
     start() {
         // Clear the timer just in case
         clearTimeout(this.timer);
@@ -79,8 +106,7 @@ class Playlist extends EventEmitter {
     nextVideo() {
         clearTimeout(this.timer);
 
-        // TODO: Reset votes
-
+        this.votes = [];
         this.currentEntry = undefined;
 
         if (this.entries.length > 0) {
@@ -93,15 +119,21 @@ class Playlist extends EventEmitter {
     }
 
     notifyVideoChanged(video) {
-        console.log("Sending new video to room", video);
+        console.info("Sending new video to room", video);
 
         this.emit('video_change', video);
     }
 
     notifyPlaylistChange(entry) {
-        console.log("Sending new playlist to room", this.entries);
+        console.info("Sending new playlist to room", this.entries);
 
         this.emit('playlist_change', entry);
+    }
+
+    notifyVideoSkipped(video, votes) {
+        console.info("Video was skipped", video, votes);
+
+        this.emit('video_skip', video, votes);
     }
 
     getCurrent() {
@@ -110,6 +142,10 @@ class Playlist extends EventEmitter {
 
     getEntries() {
         return this.entries.slice(0);
+    }
+
+    getVotes() {
+        return this.votes.slice(0);
     }
 
     static getInstance(id) {

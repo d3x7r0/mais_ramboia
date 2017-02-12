@@ -42,6 +42,7 @@ function parseVideoDetails(data) {
     return {
         id: data.id,
         provider: NAME,
+        url: `https://youtu.be/${data.id}`,
         isLive: data.snippet.liveBroadcastContent !== "none",
         title: data.snippet.title || "",
         description: data.snippet.description || "",

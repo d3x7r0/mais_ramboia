@@ -11,15 +11,14 @@ const DEFAULTS = {
         client: __dirname + '/../../_public'
     },
     slack: {
-        token: undefined,
-        channel_id: undefined,
-        channel_name: undefined
+        token: undefined
     },
     youtube: {
         key: undefined
     },
     playlist: {
-        minDuration: 0
+        minDuration: 0,
+        votes: 5
     }
 };
 

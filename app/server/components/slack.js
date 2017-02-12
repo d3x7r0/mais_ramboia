@@ -20,10 +20,12 @@ function start(app, options) {
     });
 
     // Init the bot
-    controller.spawn({
+    let bot = controller.spawn({
         token: options.slack.token,
         retry: 10
-    }).startRTM(function (err) {
+    });
+
+    bot.startRTM(function (err) {
         if (err) {
             console.error(err);
             StatusHandler.setHealthy(false);
@@ -39,21 +41,23 @@ function start(app, options) {
 
     const url = `http://${options.hostname}${options.port !== 80 ? ":" + options.port : ""}` + (options.path || "");
 
+    // TODO: allow multiple playlist instances
+    const pl = Playlist.getInstance();
+
     // Set listeners
     PROVIDERS.forEach(provider => {
         controller.hears([provider.PATTERN], ['direct_mention'], function (bot, message) {
 
-            // TODO: add video to queue and notify channel
             provider.process(message)
                 .then(
                     video => {
-                        let added = Playlist.getInstance().addVideo(message.user, video);
+                        let added = pl.addVideo(message.user, video);
 
                         if (added) {
                             console.info(`Video added to queue: ${video.id}`);
 
                             bot.say({
-                                text: `<@${message.user}>: added video to queue - <https://${message.match[0]}|${video.title}>`,
+                                text: `<@${message.user}>: added video to queue - <${video.url}|${video.title}>`,
                                 unfurl_links: true,
                                 unfurl_media: true,
                                 channel: message.channel
@@ -62,7 +66,7 @@ function start(app, options) {
                             console.info(`Video rejected: ${video.id}`);
 
                             bot.say({
-                                text: `<@${message.user}>: Computer says no!`,
+                                text: `<@${message.user}>: Computer says no! I don't like that video, give me something new.`,
                                 channel: message.channel
                             });
                         }
@@ -75,29 +79,58 @@ function start(app, options) {
     });
 
     controller.hears(['skip'], ['direct_mention'], function (bot, message) {
-        // TODO: implement vote to skip
-        bot.reply(message, `<@${message.user}> voted to skip`);
+        let voted = pl.voteToSkip(message.user);
+
+        if (voted) {
+            bot.reply(message, `<@${message.user}> voted to skip`);
+        } else {
+            bot.reply(message, `<@${message.user}>: No vote for you!`);
+        }
     });
 
     controller.hears(['link me'], ['direct_mention', 'direct_message'], function (bot, message) {
-        // TODO: implement vote to skip
         bot.reply(message, `<@${message.user}> the url is: <${url}>`);
     });
 
     controller.hears(['help'], ['direct_mention', 'direct_message'], function (bot, message) {
         bot.reply(message, {
-            attachments: [
-                {
-                    fallback: "list of available commands",
-                    title: "Available commands",
-                    text: "*&lt;video_url&gt;*: will add a video url to the queue\n" +
-                    "*skip*: will vote to skip the current track\n" +
-                    "*link me*: will print the link to the player\n" +
-                    "*help*: shows this help screen",
-                    mrkdwn_in: ["text"]
-                }
-            ]
+            attachments: [{
+                fallback: "list of available commands",
+                title: "Available commands",
+                text: "*&lt;video_url&gt;*: will add a video url to the queue\n" +
+                "*skip*: will vote to skip the current track\n" +
+                "*link me*: will print the link to the player\n" +
+                "*help*: shows this help screen",
+                mrkdwn_in: ["text"]
+            }]
         });
+    });
+
+    pl.on('video_skip', function (entry, votes) {
+        // Video was skipped, say it in all channels
+        bot.api.channels.list({}, (err, data) => {
+            if (err || data['ok'] !== true) {
+                console.error("There was an error listing channels", err);
+            } else {
+                let channels = [].concat(data.channels || []);
+
+                channels = channels
+                    .filter(entry => entry['is_member'])
+                    .map(entry => entry['id'])
+                    .forEach(id => {
+                        bot.say({
+                            text: `Skipping video <${entry.video.url}|${entry.video.title}>`,
+                            attachments: [{
+                                title: "Votes:",
+                                text: votes.map(id => `<@${id}>`).join(", ")
+                            }],
+                            channel: id
+                        })
+                    })
+
+
+            }
+        })
     });
 
     // controller.on('slash_command', function(bot, message) {

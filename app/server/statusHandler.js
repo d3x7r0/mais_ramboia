@@ -13,7 +13,8 @@ function getStatus() {
             serverTime: +new Date(),
             playlist: {
                 current: pl.getCurrent(),
-                entries: pl.getEntries()
+                entries: pl.getEntries(),
+                votes: pl.getVotes()
             }
         }
     }
