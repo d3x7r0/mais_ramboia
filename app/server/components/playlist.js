@@ -72,7 +72,7 @@ class Playlist extends EventEmitter {
             // TODO LN: replace timeouts with a loop that checks every X ms (to reduce sync errors)
             this.timer = setTimeout(this.nextVideo.bind(this), time);
         } else {
-            this.notifyVideoChanged({});
+            this.notifyVideoChanged();
         }
     }
 
