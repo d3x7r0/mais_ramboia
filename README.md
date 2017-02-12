@@ -3,8 +3,10 @@
 
 # How to use:
 
-* `npm install`
-* `node app.js`
+* create a file called `.maisramboiarc` in the root folder and add your config there (check `app/server/config.js` for options)
+* `yarn` or `npm install`
+* `npm run-script prepublish`
+* `npm start`
 
 # Build Status
 
