@@ -38,8 +38,7 @@ function start(app, options) {
     // controller.config.hostname = options.hostname;
     // controller.config.port = options.port;
     // controller.createWebhookEndpoints(app);
-
-    const url = `http://${options.hostname}${options.port !== 80 ? ":" + options.port : ""}` + (options.path || "");
+    const url = getURL(options);
 
     // TODO: allow multiple playlist instances
     const pl = Playlist.getInstance();
@@ -143,6 +142,14 @@ function start(app, options) {
     });
 
     return controller;
+}
+
+function getURL(options) {
+    if (options.url) {
+        return options.url;
+    }
+
+    return `http://${options.hostname}${options.port !== 80 ? ":" + options.port : ""}` + (options.path || "");
 }
 
 module.exports = {
