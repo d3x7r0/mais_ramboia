@@ -6,6 +6,8 @@ function start(app, options) {
     app.get('/status', function (req, res) {
         const status = statusHandler.getStatus();
 
+        res.set('Cache-Control', 'no-cache, no-store, must-revalidate');
+
         if (status.isHealthy) {
             res.status(200).send(status);
         } else {
@@ -17,6 +19,7 @@ function start(app, options) {
     app.get('/state', function (req, res) {
         const pl = Playlist.getInstance();
 
+        res.set('Cache-Control', 'no-cache, no-store, must-revalidate');
         res.send({
             serverTime: +new Date(),
             currentEntry: pl.getCurrent(),
