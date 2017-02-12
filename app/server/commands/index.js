@@ -1,6 +1,7 @@
 // populate commands
 const COMMANDS = [
-    require('./skip')
+    require('./skip'),
+    require('./add-video')
 ];
 
 function process(payload) {

@@ -1,26 +1,25 @@
-
-var TEST = /(?:https?:\/\/|www\.|m\.|^)youtu(?:be\.com(?:\/embed)?\/watch\?(?:.*?&(?:amp;)?)?v=|\.be\/)([\w‌​\-]+)(?:&(?:amp;)?[\w\?=]*)?/;
+const PROVIDERS = [
+    require('../providers/youtube')
+];
 
 function process(payload) {
-    const videoID = getVideoID(payload.text);
+    const provider = findProvider(payload.text);
 
-    console.info(`User ${payload.user_id} added video with ID: ${videoID}`);
+    // TODO: add to playlist and call slack callback with details
+    provider.process(payload).then(
+        console.log.bind(console),
+        console.error.bind(console)
+    );
 
-    return `Adding video with ID: ${videoID}`;
+    return "Adding video...";
 }
 
 function canProcess(text) {
-    return getVideoID(text) !== undefined;
+    return findProvider(text) !== undefined;
 }
 
-function getVideoID(text) {
-    const result = TEST.exec(text);
-
-    if (result && result[1]) {
-        return result[1];
-    }
-
-    return undefined;
+function findProvider(text) {
+    return PROVIDERS.find(provider => provider.canProcess(text))
 }
 
 module.exports = {

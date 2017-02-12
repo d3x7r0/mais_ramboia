@@ -1,9 +1,9 @@
 /* jshint node:true */
 'use strict';
 
-var rc = require('rc');
+const rc = require('rc');
 
-var DEFAULTS = {
+const DEFAULTS = {
     port: Number(process.env.PORT || 8080),
     reverseProxyMode: false,
     dir: {
@@ -13,6 +13,9 @@ var DEFAULTS = {
         token: undefined,
         channel_id: undefined,
         channel_name: undefined
+    },
+    youtube: {
+        key: undefined
     }
 };
 
