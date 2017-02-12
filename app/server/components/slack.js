@@ -57,8 +57,8 @@ function start(app, options) {
 
                             bot.say({
                                 text: `<@${message.user}>: added video to queue - <${video.url}|${video.title}>`,
-                                unfurl_links: true,
-                                unfurl_media: true,
+                                unfurl_links: false,
+                                unfurl_media: false,
                                 channel: message.channel
                             });
                         } else {
