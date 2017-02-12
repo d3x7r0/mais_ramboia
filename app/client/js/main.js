@@ -130,7 +130,13 @@ function sToTime(duration) {
         hours,
         minutes,
         seconds
-    ].filter(entry => entry > 0).join(":");
+    ].map(entry => {
+        if (entry.toString().length < 2) {
+            return "0" + entry;
+        }
+
+        return entry;
+    }).join(":");
 }
 
 // Public methods
