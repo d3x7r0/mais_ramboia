@@ -6,20 +6,21 @@ import {fetchJSON} from "./utils/fetch";
 
 let player;
 
-let playlistWrapper;
+let playlistWrapper,
+    muteButton,
+    elapsedTime,
+    totalTime;
 
 // Private methods
 function init() {
     player = new Player('#player');
 
     playlistWrapper = DOM.find("#playlist").pop();
+    muteButton = DOM.find("#video-mute").pop();
+    elapsedTime = DOM.find("#video-time-current").pop();
+    totalTime = DOM.find("#video-time-total").pop();
 
-    // TODO: remove me
-    // player.play('dQw4w9WgXcQ', 180).then(function () {
-    //     console.log("Playing");
-    // });
-    //
-    // player.mute();
+    muteButton.addEventListener('click', toggleMute);
 
     DOM.loadScript("/socket.io/socket.io.js").then(
         () => {
@@ -35,6 +36,10 @@ function init() {
     );
 
     synchronizeState();
+
+    player.isMuted().then(updateMuteButton);
+
+    updateTime();
 }
 
 function synchronizeState() {
@@ -79,6 +84,53 @@ function updateCurrentEntry(state) {
     } else {
         player.stop();
     }
+}
+
+function toggleMute() {
+    player.toggleMute().then(updateMuteButton);
+}
+
+function updateMuteButton(state) {
+    muteButton.innerHTML = state.muted ? "Unmute" : "Mute";
+}
+
+let lastUpdate = +new Date();
+
+function updateTime() {
+
+    let now = +new Date();
+
+    // Update two times per second
+    if (now - lastUpdate >= 500) {
+        setTime();
+    }
+
+    requestAnimationFrame(updateTime);
+}
+
+function setTime() {
+    player.getTime().then(time => {
+        totalTime.innerHTML = sToTime(time.total);
+        elapsedTime.innerHTML = sToTime(time.elapsed);
+    });
+}
+
+function sToTime(duration) {
+    let miliseconds = duration * 1000 | 0;
+
+    let seconds = parseInt((miliseconds / 1000) % 60),
+        minutes = parseInt((miliseconds / (1000 * 60)) % 60),
+        hours = parseInt((miliseconds / (1000 * 60 * 60)) % 24);
+
+    hours = (hours < 10) ? "0" + hours : hours;
+    minutes = (minutes < 10) ? "0" + minutes : minutes;
+    seconds = (seconds < 10) ? "0" + seconds : seconds;
+
+    return [
+        hours,
+        minutes,
+        seconds
+    ].filter(entry => entry > 0).join(":");
 }
 
 // Public methods
