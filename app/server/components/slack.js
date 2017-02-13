@@ -185,7 +185,7 @@ function toAllChannels(bot, cb) {
 function getNextVideoMessage(entry) {
     if (entry) {
         return {
-            text: `Now playing: <${entry.video.url}|${entry.video.title}> (submitted by <${entry.user}>)`,
+            text: `Now playing: <${entry.video.url}|${entry.video.title}> (submitted by <@${entry.user}>)`,
             unfurl_links: false,
             unfurl_media: false
         };
