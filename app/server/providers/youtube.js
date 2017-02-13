@@ -5,7 +5,12 @@ const fetch = require('../utils/fetch');
 const YOUTUBE_URL_REGEX = /(?:https?:\/\/|www\.|m\.|^)youtu(?:be\.com(?:\/embed)?\/watch\?(?:.*?&(?:amp;)?)?v=|\.be\/)([\w‌​\-]+)(?:&(?:amp;)?[\w?=]*)?/;
 const ISO8601_DURATION_REGEX = /PT(\d+H)?(\d+M)?(\d+S)?/;
 
-const API_URL_GET_DETAILS = (id) => `https://www.googleapis.com/youtube/v3/videos?key=${SETTINGS['youtube']['key']}&id=${id}&part=snippet,contentDetails`;
+const API_BASE_URL = `https://www.googleapis.com/youtube/v3`;
+
+const API_PART_API_KEY = `&key=${SETTINGS['youtube']['key']}`;
+
+const API_URL_GET_DETAILS = id => API_BASE_URL + `/videos?id=${id}&part=snippet,contentDetails,status` + API_PART_API_KEY;
+const API_URL_SEARCH = q => API_BASE_URL + `/search?q=${encodeURIComponent(q)}&regionCode=${SETTINGS['youtube']['region']}&safeSearch=moderate&type=video&videoDuration=short&videoEmbeddable=true&maxResults=1&part=snippet` + API_PART_API_KEY;
 
 const NAME = "youtube";
 
@@ -13,6 +18,14 @@ function process(payload) {
     const videoID = getVideoID(payload.text);
 
     return fetchVideoDetails(videoID)
+        .then(parseVideoDetails);
+}
+
+function random(payload) {
+    return fetchRandomVideoDetails(payload.text)
+        .then(entry => {
+            return fetchVideoDetails(entry.id.videoId)
+        })
         .then(parseVideoDetails);
 }
 
@@ -29,9 +42,19 @@ function getVideoID(text) {
 function fetchVideoDetails(id) {
     const url = API_URL_GET_DETAILS(id);
 
-    return fetch.json(url).then(function (data) {
-        if (!data['pageInfo'] || data['pageInfo']['totalResults'] !== 1) {
-            throw new Error("Not Found");
+    return doRequest(url);
+}
+
+function fetchRandomVideoDetails(query) {
+    const url = API_URL_SEARCH(query);
+
+    return doRequest(url);
+}
+
+function doRequest(url) {
+    return fetch.json(url).then(data => {
+        if (!data['pageInfo'] || data['pageInfo']['totalResults'] === 0) {
+            throw new Error("NotFound");
         }
 
         return data['items'][0];
@@ -44,6 +67,7 @@ function parseVideoDetails(data) {
         provider: NAME,
         url: `https://youtu.be/${data.id}`,
         isLive: data.snippet.liveBroadcastContent !== "none",
+        isEmbeddable: !(data['status'] && data['status']['embeddable'] === false),
         title: data.snippet.title || "",
         description: data.snippet.description || "",
         thumbnail: parseVideoThumbnail(data.snippet.thumbnails || {}),
@@ -81,7 +105,8 @@ function parseVideoDuration(duration) {
 }
 
 module.exports = {
-    NAME : NAME,
+    NAME: NAME,
     PATTERN: YOUTUBE_URL_REGEX,
-    process: process
+    process: process,
+    random: random
 };

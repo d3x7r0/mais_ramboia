@@ -15,6 +15,11 @@ const DEFAULTS = {
         token: undefined
     },
     youtube: {
+        /**
+         * this is an ISO 3166-1 alpha-2 country code
+         * <http://www.iso.org/iso/country_codes/iso_3166_code_lists/country_names_and_code_elements.htm>
+         */
+        region: 'PT',
         key: undefined
     },
     playlist: {

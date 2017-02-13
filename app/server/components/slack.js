@@ -48,30 +48,12 @@ function start(app, options) {
         controller.hears([provider.PATTERN], ['direct_mention'], function (bot, message) {
 
             provider.process(message)
-                .then(
-                    video => {
-                        let added = pl.addVideo(message.user, video);
+                .then(addVideo(pl, bot, message))
+                .catch(err => {
+                    console.error(err.message || "unknown error", err);
 
-                        if (added) {
-                            console.info(`Video added to queue: ${video.id}`);
-
-                            bot.say({
-                                text: `<@${message.user}>: added video to queue - <${video.url}|${video.title}>`,
-                                unfurl_links: false,
-                                unfurl_media: false,
-                                channel: message.channel
-                            });
-                        } else {
-                            console.info(`Video rejected: ${video.id}`);
-
-                            bot.say({
-                                text: `<@${message.user}>: Computer says no! I don't like that video, give me something new.`,
-                                channel: message.channel
-                            });
-                        }
-                    }
-                )
-                .catch(console.error.bind(console));
+                    bot.reply(message, `<@${message.user}> sorry, something went wrong`)
+                });
 
             bot.startTyping(message);
         });
@@ -100,7 +82,8 @@ function start(app, options) {
                 "*skip*: will vote to skip the current track\n" +
                 "*link me*: will print the link to the player\n" +
                 "*what’s playing?*: will print the currently playing song\n" +
-                "*help*: shows this help screen",
+                "*help*: shows this help screen\n" +
+                "or just say something to me and I'll search youtube for a random video",
                 mrkdwn_in: ["text"]
             }]
         });
@@ -115,6 +98,37 @@ function start(app, options) {
         bot.reply(message, response);
     });
 
+    controller.on('direct_mention', function(bot, message) {
+        // Search the first provider for a random video
+        let provider = PROVIDERS[0];
+
+        if (!provider) {
+            console.error("No provider available. Aborting");
+            return;
+        }
+
+        if (isEmpty(message.text)) {
+            return;
+        }
+
+        provider.random(message)
+            .then(addVideo(pl, bot, message))
+            .catch(err => {
+                console.error(err.message || "unknown error", err);
+
+                let text = `<@${message.user}> `;
+
+                if (err && err.message === "NotFound") {
+                    text += "sorry, I couldn't find anything";
+                } else {
+                    text += "sorry, something went wrong";
+                }
+
+                bot.reply(message, text)
+            });
+
+        bot.startTyping(message);
+    });
 
     pl.on('video_skip', function (entry, votes) {
         // Video was skipped, say it in all channels
@@ -207,6 +221,48 @@ function getNowPlayingMessage(userID, entry) {
         return {
             text: `<@${userID}> nothing's playing, maybe you can give me a video or two.`
         };
+    }
+}
+
+function isEmpty(str) {
+    return !str || str.length == 0 || str.replace(/\W/g, '').length === 0;
+}
+
+const ERRORS = {
+    "Duplicate": "I don't like that video, give me something new.",
+    "Live": "I can't play livestreams yet. This isn't twitch.",
+    "NotEmbeddable": "Sorry, YouTube won't let me play that one.",
+    "TooShort": "Give me something larger. It has to be HUGE!"
+};
+
+function addVideo(pl, bot, message) {
+    return function onVideoReady(video) {
+        return pl.addVideo(message.user, video).then(
+            video => {
+                console.info(`Video added to queue: ${video.id}`);
+
+                bot.say({
+                    text: `<@${message.user}>: added video to queue - <${video.url}|${video.title}>`,
+                    unfurl_links: false,
+                    unfurl_media: false,
+                    channel: message.channel
+                });
+            },
+            err => {
+                if (err && err.message === "Rejected") {
+                    console.info(`Video rejected: ${video.id}`);
+
+                    let reason = err.reason && ERRORS[err.reason] || "";
+
+                    bot.say({
+                        text: `<@${message.user}>: Computer says no! ${reason}`,
+                        channel: message.channel
+                    });
+                } else {
+                    throw err || new Error("unknownError");
+                }
+            }
+        );
     }
 }
 

@@ -1,4 +1,5 @@
 const EventEmitter = require('events');
+const Promise = require('bluebird');
 
 const SETTINGS = require('../config');
 
@@ -19,38 +20,55 @@ class Playlist extends EventEmitter {
     }
 
     addVideo(user, video) {
-        let last = this.entries[this.entries.length - 1];
+        return new Promise(resolve => {
+            this.validate(video);
 
-        if (last && last.video.id === video.id) {
+            this.entries.push({
+                user: user,
+                video: video
+            });
+
+            if (this.entries.length === 1) {
+                // set the timer
+                this.start()
+            }
+
+            this.notifyPlaylistChange(
+                this.entries[this.entries.length - 1]
+            );
+
+            resolve(video);
+        });
+    }
+
+    validate(video) {
+        if (this.entries.find(entry => entry.video.id === video.id)) {
             // Reject video if it's a duplicate
-            return false;
+            let err = new Error("Rejected");
+            err.reason = "Duplicate";
+            throw err;
         }
 
         if (video.isLive === true) {
             // Reject video if it's a live stream
-            return false;
+            let err = new Error("Rejected");
+            err.reason = "Live";
+            throw err;
+        }
+
+        if (!video.isEmbeddable) {
+            // Reject video if it isn't embeddable
+            let err = new Error("Rejected");
+            err.reason = "NotEmbeddable";
+            throw err;
         }
 
         if (video.duration <= SETTINGS['playlist']['minDuration']) {
             // Reject video if it's too short
-            return false;
+            let err = new Error("Rejected");
+            err.reason = "TooShort";
+            throw err;
         }
-
-        this.entries.push({
-            user: user,
-            video: video
-        });
-
-        if (this.entries.length === 1) {
-            // set the timer
-            this.start()
-        }
-
-        this.notifyPlaylistChange(
-            this.entries[this.entries.length - 1]
-        );
-
-        return true;
     }
 
     voteToSkip(userID) {
