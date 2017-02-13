@@ -118,10 +118,10 @@ class Playlist extends EventEmitter {
         this.notifyPlaylistChange();
     }
 
-    notifyVideoChanged(video) {
-        console.info("Sending new video to room", video);
+    notifyVideoChanged(entry) {
+        console.info("Sending new video to room", entry);
 
-        this.emit('video_change', video);
+        this.emit('video_change', entry);
     }
 
     notifyPlaylistChange(entry) {
