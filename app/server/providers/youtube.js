@@ -10,7 +10,7 @@ const API_BASE_URL = `https://www.googleapis.com/youtube/v3`;
 const API_PART_API_KEY = `&key=${SETTINGS['youtube']['key']}`;
 
 const API_URL_GET_DETAILS = id => API_BASE_URL + `/videos?id=${id}&part=snippet,contentDetails,status` + API_PART_API_KEY;
-const API_URL_SEARCH = q => API_BASE_URL + `/search?q=${encodeURIComponent(q)}&regionCode=${SETTINGS['youtube']['region']}&safeSearch=moderate&type=video&videoDuration=short&videoEmbeddable=true&maxResults=1&part=snippet` + API_PART_API_KEY;
+const API_URL_SEARCH = q => API_BASE_URL + `/search?q=${encodeURIComponent(q)}&regionCode=${SETTINGS['youtube']['region']}&safeSearch=moderate&type=video&videoDuration=short&videoEmbeddable=true&maxResults=10&part=snippet` + API_PART_API_KEY;
 
 const NAME = "youtube";
 
@@ -57,8 +57,14 @@ function doRequest(url) {
             throw new Error("NotFound");
         }
 
-        return data['items'][0];
+        return data['items'][getRandomInt(0, data['items'].length)];
     });
+}
+
+function getRandomInt(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min)) + min;
 }
 
 function parseVideoDetails(data) {
