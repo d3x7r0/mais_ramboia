@@ -89,6 +89,8 @@ class Playlist extends EventEmitter {
     }
 
     tallyVotes() {
+        let votes = parseInt(SETTINGS['playlist']['votes'], 10) || 0;
+
         if (this.votes.length >= SETTINGS['playlist']['votes']) {
             console.info("Users have voted to skip", this.votes);
 
