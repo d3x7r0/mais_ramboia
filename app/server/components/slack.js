@@ -6,11 +6,6 @@ const Behaviour = require('./behaviour');
 
 const BUS = require('../utils/bus');
 
-// video providers
-const PROVIDERS = [
-    require("../providers/youtube")
-];
-
 function start(app, options) {
     // Init the bot controller
     const controller = Botkit.slackbot({
@@ -43,7 +38,7 @@ function start(app, options) {
     const url = getURL(options);
 
     // Set listeners
-    PROVIDERS.forEach(provider => {
+    Behaviour.getProviders().forEach(provider => {
         controller.hears([provider.PATTERN], ['direct_mention'], function (bot, message) {
 
             Behaviour.addVideo(provider, message)
@@ -101,19 +96,11 @@ function start(app, options) {
     });
 
     controller.on('direct_mention', function (bot, message) {
-        // Search the first provider for a random video
-        let provider = PROVIDERS[0];
-
-        if (!provider) {
-            console.error("No provider available. Aborting");
-            return;
-        }
-
         if (isEmpty(message.text)) {
             return;
         }
 
-        Behaviour.randomVideo(provider, message)
+        Behaviour.randomVideo(message)
             .then(
                 video => onVideoAdded(video, bot, message),
                 err => onVideoError(err, bot, message)
@@ -205,8 +192,10 @@ function toAllChannels(bot, cb) {
 
 function getNextVideoMessage(entry) {
     if (entry) {
+        let addedBy = entry.user ? `(submitted by <@${entry.user}>)` : '(automatically added)';
+
         return {
-            text: `Now playing: <${entry.video.url}|${entry.video.title}> (submitted by <@${entry.user}>)`,
+            text: `Now playing: <${entry.video.url}|${entry.video.title}> ${addedBy}`,
             unfurl_links: false,
             unfurl_media: false
         };

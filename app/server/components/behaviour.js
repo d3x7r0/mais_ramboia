@@ -2,6 +2,11 @@ const Playlist = require('./playlist');
 
 const BUS = require('../utils/bus');
 
+// video providers
+const PROVIDERS = [
+    require("../providers/youtube")
+];
+
 // TODO: allow multiple playlist instances
 function start(options) {
     const pl = Playlist.getInstance();
@@ -12,7 +17,7 @@ function start(options) {
     });
 
     pl.on(Playlist.TOPICS.PLAYLIST_CHANGE, function (currentEntry) {
-        // TODO: omit the event if the playlist would be entry. Let the related entry do the notification
+        // TODO: omit the event if the playlist would be empty. Let the related entry do the notification
 
         // Simply re-emit the event
         BUS.getInstance().emit(BUS.TOPICS.PLAYLIST_CHANGE, currentEntry);
@@ -38,7 +43,15 @@ function voteToSkip(user) {
     return pl.voteToSkip(user);
 }
 
-function randomVideo(provider, message) {
+function randomVideo(message) {
+    // Search the first provider for a random video
+    const provider = PROVIDERS[0];
+
+    if (!provider) {
+        console.error("No provider available. Aborting");
+        throw new Error("ProviderUnavailable");
+    }
+
     const pl = Playlist.getInstance();
 
     const blacklist = pl.getEntries().map(entry => entry.video.id);
@@ -49,7 +62,7 @@ function randomVideo(provider, message) {
 }
 
 function addVideoToPlaylist(pl, message) {
-    return video => pl.addVideo(message.user, video);
+    return video => pl.addVideo(message && message.user, video);
 }
 
 function getEntries() {
@@ -71,5 +84,6 @@ module.exports = {
     randomVideo: randomVideo,
     getEntries: getEntries,
     getCurrent: getCurrent,
-    getVotes: getVotes
+    getVotes: getVotes,
+    getProviders: () => PROVIDERS
 };
