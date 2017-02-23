@@ -111,7 +111,7 @@ function start(app, options) {
             return;
         }
 
-        provider.random(message)
+        provider.random(message, pl.getEntries().map(entry => entry.video.id))
             .then(addVideo(pl, bot, message))
             .catch(err => {
                 console.error(err.message || "unknown error", err);

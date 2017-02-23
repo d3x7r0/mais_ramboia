@@ -112,14 +112,15 @@ class Playlist extends EventEmitter {
 
             time = entry.video.duration * 1000; // seconds to millis
 
-            this.notifyVideoChanged(entry);
+            this.notifyVideoChanged(entry, this.currentEntry);
             this.currentEntry = entry;
 
             // Start the timer for the next video
             // TODO LN: replace timeouts with a loop that checks every X ms (to reduce sync errors)
             this.timer = setTimeout(this.nextVideo.bind(this), time);
         } else {
-            this.notifyVideoChanged();
+            this.notifyVideoChanged(undefined, this.currentEntry);
+            this.currentEntry = undefined;
         }
     }
 
@@ -127,7 +128,6 @@ class Playlist extends EventEmitter {
         clearTimeout(this.timer);
 
         this.votes = [];
-        this.currentEntry = undefined;
 
         if (this.entries.length > 0) {
             this.entries.shift();
@@ -138,10 +138,10 @@ class Playlist extends EventEmitter {
         this.notifyPlaylistChange();
     }
 
-    notifyVideoChanged(entry) {
-        console.info("Sending new video to room", entry);
+    notifyVideoChanged(entry, previous) {
+        console.info("Sending new video to room", entry, previous);
 
-        this.emit('video_change', entry);
+        this.emit('video_change', entry, previous);
     }
 
     notifyPlaylistChange(entry) {
