@@ -1,4 +1,4 @@
-const Playlist = require('./playlist');
+const Behaviour = require('./behaviour');
 
 function start(app, options) {
     const statusHandler = require('./../statusHandler');
@@ -17,13 +17,11 @@ function start(app, options) {
 
     // FIXME: handle multiple rooms
     app.get('/state', function (req, res) {
-        const pl = Playlist.getInstance();
-
         res.set('Cache-Control', 'no-cache, no-store, must-revalidate');
         res.send({
-            serverTime: +new Date(),
-            currentEntry: pl.getCurrent(),
-            entries: pl.getEntries()
+            serverTime: Date.now(),
+            currentEntry: Behaviour.getCurrent(),
+            entries: Behaviour.getEntries()
         });
     });
 }

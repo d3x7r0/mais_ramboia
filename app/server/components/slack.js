@@ -2,12 +2,14 @@ const Botkit = require('botkit');
 
 const StatusHandler = require('../statusHandler');
 
+const Behaviour = require('./behaviour');
+
+const BUS = require('../utils/bus');
+
 // video providers
 const PROVIDERS = [
     require("../providers/youtube")
 ];
-
-const Playlist = require('./playlist');
 
 function start(app, options) {
     // Init the bot controller
@@ -40,15 +42,15 @@ function start(app, options) {
     // controller.createWebhookEndpoints(app);
     const url = getURL(options);
 
-    // TODO: allow multiple playlist instances
-    const pl = Playlist.getInstance();
-
     // Set listeners
     PROVIDERS.forEach(provider => {
         controller.hears([provider.PATTERN], ['direct_mention'], function (bot, message) {
 
-            provider.process(message)
-                .then(addVideo(pl, bot, message))
+            Behaviour.addVideo(provider, message)
+                .then(
+                    video => onVideoAdded(video, bot, message),
+                    err => onVideoError(err, bot, message)
+                )
                 .catch(err => {
                     console.error(err.message || "unknown error", err);
 
@@ -60,7 +62,7 @@ function start(app, options) {
     });
 
     controller.hears(['skip'], ['direct_mention'], exactMatch, function (bot, message) {
-        let voted = pl.voteToSkip(message.user);
+        let voted = Behaviour.voteToSkip(message.user);
 
         if (voted) {
             bot.reply(message, `<@${message.user}> voted to skip`);
@@ -98,7 +100,7 @@ function start(app, options) {
         bot.reply(message, response);
     });
 
-    controller.on('direct_mention', function(bot, message) {
+    controller.on('direct_mention', function (bot, message) {
         // Search the first provider for a random video
         let provider = PROVIDERS[0];
 
@@ -111,8 +113,11 @@ function start(app, options) {
             return;
         }
 
-        provider.random(message, pl.getEntries().map(entry => entry.video.id))
-            .then(addVideo(pl, bot, message))
+        Behaviour.randomVideo(provider, message)
+            .then(
+                video => onVideoAdded(video, bot, message),
+                err => onVideoError(err, bot, message)
+            )
             .catch(err => {
                 console.error(err.message || "unknown error", err);
 
@@ -130,7 +135,9 @@ function start(app, options) {
         bot.startTyping(message);
     });
 
-    pl.on('video_skip', function (entry, votes) {
+    const busInstance = BUS.getInstance();
+
+    busInstance.on(BUS.TOPICS.VIDEO_SKIP, function (entry, votes) {
         // Video was skipped, say it in all channels
         toAllChannels(bot, channels => {
             channels.map(entry => entry['id']).forEach(id => {
@@ -146,7 +153,7 @@ function start(app, options) {
         });
     });
 
-    pl.on('video_change', function (entry) {
+    busInstance.on(BUS.TOPICS.VIDEO_CHANGE, function (entry) {
         // New video, say it in all channels
         toAllChannels(bot, channels => {
             let message = getNextVideoMessage(entry);
@@ -235,34 +242,31 @@ const ERRORS = {
     "TooShort": "Give me something larger. It has to be HUGE!"
 };
 
-function addVideo(pl, bot, message) {
-    return function onVideoReady(video) {
-        return pl.addVideo(message.user, video).then(
-            video => {
-                console.info(`Video added to queue: ${video.id}`);
+function onVideoAdded(video, bot, message) {
+    console.info(`Video added to queue: ${video.id}`);
 
-                bot.say({
-                    text: `<@${message.user}>: added video to queue - <${video.url}|${video.title}>`,
-                    unfurl_links: false,
-                    unfurl_media: false,
-                    channel: message.channel
-                });
-            },
-            err => {
-                if (err && err.message === "Rejected") {
-                    console.info(`Video rejected: ${video.id}`);
+    bot.say({
+        text: `<@${message.user}>: added video to queue - <${video.url}|${video.title}>`,
+        unfurl_links: false,
+        unfurl_media: false,
+        channel: message.channel
+    });
+}
 
-                    let reason = err.reason && ERRORS[err.reason] || "";
+function onVideoError(err, bot, message) {
+    let video = err.video || {};
 
-                    bot.say({
-                        text: `<@${message.user}>: Computer says no! ${reason}`,
-                        channel: message.channel
-                    });
-                } else {
-                    throw err || new Error("unknownError");
-                }
-            }
-        );
+    if (err && video && err.message === "Rejected") {
+        console.info(`Video rejected: ${video.id}`);
+
+        let reason = err.reason && ERRORS[err.reason] || "";
+
+        bot.say({
+            text: `<@${message.user}>: Computer says no! ${reason}`,
+            channel: message.channel
+        });
+    } else {
+        throw err || new Error("unknownError");
     }
 }
 

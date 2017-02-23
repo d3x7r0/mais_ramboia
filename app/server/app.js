@@ -2,10 +2,13 @@
 
 const SETTINGS = require(__dirname + '/config');
 
+// Behaviour
+const Behaviour = require('./components/behaviour');
+Behaviour.start(SETTINGS);
+
+// Web server
 const express = require('express');
-
 const app = express();
-
 const server = require('http').Server(app);
 
 // Middleware

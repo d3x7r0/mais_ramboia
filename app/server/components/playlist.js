@@ -7,6 +7,12 @@ const DEFAULT_INSTANCE_ID = "_";
 
 const PLAYLISTS = [];
 
+const TOPICS = {
+    VIDEO_CHANGE: 'video_change',
+    PLAYLIST_CHANGE: 'playlist_change',
+    VIDEO_SKIP: 'video_skip',
+};
+
 class Playlist extends EventEmitter {
     constructor(id) {
         super();
@@ -46,6 +52,7 @@ class Playlist extends EventEmitter {
             // Reject video if it's a duplicate
             let err = new Error("Rejected");
             err.reason = "Duplicate";
+            err.video = video;
             throw err;
         }
 
@@ -53,6 +60,7 @@ class Playlist extends EventEmitter {
             // Reject video if it's a live stream
             let err = new Error("Rejected");
             err.reason = "Live";
+            err.video = video;
             throw err;
         }
 
@@ -60,6 +68,7 @@ class Playlist extends EventEmitter {
             // Reject video if it isn't embeddable
             let err = new Error("Rejected");
             err.reason = "NotEmbeddable";
+            err.video = video;
             throw err;
         }
 
@@ -67,6 +76,7 @@ class Playlist extends EventEmitter {
             // Reject video if it's too short
             let err = new Error("Rejected");
             err.reason = "TooShort";
+            err.video = video;
             throw err;
         }
     }
@@ -133,27 +143,29 @@ class Playlist extends EventEmitter {
             this.entries.shift();
 
             this.start();
+        } else {
+            this.currentEntry = undefined;
         }
 
         this.notifyPlaylistChange();
     }
 
-    notifyVideoChanged(entry, previous) {
-        console.info("Sending new video to room", entry, previous);
+    notifyVideoChanged(currentEntry, previousEntry) {
+        console.info("Sending new video to room", currentEntry, previousEntry);
 
-        this.emit('video_change', entry, previous);
+        this.emit(TOPICS.VIDEO_CHANGE, currentEntry, previousEntry);
     }
 
-    notifyPlaylistChange(entry) {
+    notifyPlaylistChange(currentEntry) {
         console.info("Sending new playlist to room", this.entries);
 
-        this.emit('playlist_change', entry);
+        this.emit(TOPICS.PLAYLIST_CHANGE, currentEntry);
     }
 
-    notifyVideoSkipped(video, votes) {
-        console.info("Video was skipped", video, votes);
+    notifyVideoSkipped(skippedEntry, votes) {
+        console.info("Video was skipped", skippedEntry, votes);
 
-        this.emit('video_skip', video, votes);
+        this.emit(TOPICS.VIDEO_SKIP, skippedEntry, votes);
     }
 
     getCurrent() {
@@ -181,5 +193,7 @@ class Playlist extends EventEmitter {
         return PLAYLISTS[id];
     }
 }
+
+Playlist.TOPICS = TOPICS;
 
 module.exports = Playlist;

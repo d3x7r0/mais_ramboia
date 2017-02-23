@@ -1,34 +1,35 @@
 const socketio = require('socket.io');
 
-const Playlist = require('./playlist');
+const Behaviour = require('./behaviour');
+
+const BUS = require('../utils/bus');
 
 function start(server, options) {
     const io = socketio(server);
 
-    // FIXME: deal with multiple rooms
-    const pl = Playlist.getInstance();
+    const busInstance = BUS.getInstance();
 
-    pl.on('playlist_change', function (video) {
+    busInstance.on(BUS.TOPICS.PLAYLIST_CHANGE, function (video) {
         if (video) {
             emitPlaylistAdd(io, video);
         } else {
-            emitPlaylistChange(io, pl);
+            emitPlaylistChange(io, Behaviour);
         }
     });
 
-    pl.on('video_change', function (video) {
+    busInstance.on(BUS.TOPICS.VIDEO_CHANGE, function (video) {
         emitVideoChange(io, video);
     });
 
-    emitPlaylistChange(io, pl);
-    emitVideoChange(io, pl.getCurrent());
+    emitPlaylistChange(io, Behaviour);
+    emitVideoChange(io, Behaviour.getCurrent());
 
     return io;
 }
 
 function emitPlaylistChange(target, pl) {
     target.emit('playlist_change', {
-        serverTime: +new Date(),
+        serverTime: Date.now(),
         currentEntry: pl.getCurrent(),
         entries: pl.getEntries()
     });
@@ -36,14 +37,14 @@ function emitPlaylistChange(target, pl) {
 
 function emitPlaylistAdd(target, entry) {
     target.emit('playlist_add', {
-        serverTime: +new Date(),
+        serverTime: Date.now(),
         entry: entry
     });
 }
 
 function emitVideoChange(target, entry) {
     target.emit('video_change', {
-        serverTime: +new Date(),
+        serverTime: Date.now(),
         currentEntry: entry
     });
 }

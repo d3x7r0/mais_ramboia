@@ -1,23 +1,21 @@
 const SETTINGS = require('./config');
 
-const Playlist = require('./components/playlist');
+const Behaviour = require('./components/behaviour');
 
 let HEALTHY = false;
 
 // TODO: better status
 function getStatus() {
-    const pl = Playlist.getInstance();
-
     return {
         isHealthy: HEALTHY,
         uptime: process.uptime(),
         details: {
-            serverTime: +new Date(),
+            serverTime: Date.now(),
             settings: getSettings(),
             playlist: {
-                current: pl.getCurrent(),
-                entries: pl.getEntries(),
-                votes: pl.getVotes()
+                current: Behaviour.getCurrent(),
+                entries: Behaviour.getEntries(),
+                votes: Behaviour.getVotes()
             }
         }
     }
