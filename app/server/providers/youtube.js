@@ -9,9 +9,9 @@ const API_BASE_URL = `https://www.googleapis.com/youtube/v3`;
 
 const API_PART_API_KEY = `&key=${SETTINGS['youtube']['key']}`;
 
-const API_URL_GET_DETAILS = id => API_BASE_URL + `/videos?id=${id}&part=snippet,contentDetails,status` + API_PART_API_KEY;
-const API_URL_SEARCH = q => API_BASE_URL + `/search?q=${encodeURIComponent(q)}&regionCode=${SETTINGS['youtube']['region']}&safeSearch=moderate&type=video&videoDuration=short&videoEmbeddable=true&maxResults=10&part=snippet` + API_PART_API_KEY;
-const API_URL_RELATED = id => API_BASE_URL + `/search?relatedToVideoId=${id}&regionCode=${SETTINGS['youtube']['region']}&safeSearch=moderate&type=video&videoDuration=short&videoEmbeddable=true&maxResults=10&part=snippet`;
+const API_URI_GET_DETAILS = id => `/videos?id=${id}&part=snippet,contentDetails,status`;
+const API_URI_SEARCH = q => `/search?q=${encodeURIComponent(q)}&regionCode=${SETTINGS['youtube']['region']}&order=relevance&safeSearch=moderate&type=video&topicId=%2Fm%2F04rlf&videoEmbeddable=true&maxResults=10&part=snippet`;
+const API_URI_RELATED = id => `/search?relatedToVideoId=${id}&regionCode=${SETTINGS['youtube']['region']}&safeSearch=moderate&type=video&videoEmbeddable=true&maxResults=10&part=snippet`;
 
 const NAME = "youtube";
 
@@ -51,24 +51,26 @@ function getVideoID(text) {
 }
 
 function fetchVideoDetails(id) {
-    const url = API_URL_GET_DETAILS(id);
+    const uri = API_URI_GET_DETAILS(id);
 
-    return doRequest(url).then(entries => entries[0]);
+    return doRequest(uri).then(entries => entries[0]);
 }
 
 function fetchRandomVideoDetails(query) {
-    const url = API_URL_SEARCH(query);
+    const uri = API_URI_SEARCH(query);
 
-    return doRequest(url);
+    return doRequest(uri);
 }
 
 function fetchRelatedVideoDetails(id) {
-    const url = API_URL_RELATED(id);
+    const uri = API_URI_RELATED(id);
 
-    return doRequest(url);
+    return doRequest(uri);
 }
 
-function doRequest(url) {
+function doRequest(uri) {
+    let url = API_BASE_URL + uri + API_PART_API_KEY;
+
     return fetch.json(url).then(data => {
         if (!data['pageInfo'] || data['pageInfo']['totalResults'] === 0) {
             throw new Error("NotFound");
