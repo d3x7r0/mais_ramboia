@@ -46,9 +46,16 @@ export function loadScript(src) {
     });
 }
 
+export function encode(text) {
+    return text.replace(/[<>"'\\/]/g, function (e) {
+        return "&#" + e.charCodeAt(0) + ";";
+    });
+}
+
 export default {
     find: find,
     trigger: trigger,
     ready: ready,
-    loadScript: loadScript
+    loadScript: loadScript,
+    encode: encode
 };

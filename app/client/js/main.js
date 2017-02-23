@@ -67,10 +67,10 @@ function addVideo(state) {
 }
 
 function renderPlaylistEntry(entry) {
-    return `<li class="playlist-entry" title="${entry.video.title}" data-id="${entry.video.id}">
+    return `<li class="playlist-entry" title="${DOM.encode(entry.video.title)}" data-id="${entry.video.id}">
                 <a href="${entry.video.url}" target="_blank">
                     <img class="playlist-entry-background" src="${entry.video.thumbnail}"/>
-                    <h1 class="playlist-entry-title">${entry.video.title}</h1>
+                    <h1 class="playlist-entry-title">${DOM.encode(entry.video.title)}</h1>
                 </a>
             </li>`;
 }
