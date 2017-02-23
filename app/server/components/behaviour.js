@@ -11,6 +11,10 @@ const PROVIDERS = [
 function start(options) {
     const pl = Playlist.getInstance();
 
+    const maxRelated = parseInt(options.playlist.maxRelated, 10);
+
+    let related = 0;
+
     pl.on(Playlist.TOPICS.VIDEO_SKIP, function (skippedEntry, votes) {
         // Simply re-emit the event
         BUS.getInstance().emit(BUS.TOPICS.VIDEO_SKIP, skippedEntry, votes);
@@ -24,9 +28,18 @@ function start(options) {
     });
 
     pl.on(Playlist.TOPICS.VIDEO_CHANGE, function (currentEntry, previousEntry) {
-        // TODO: get a related video if the queue is now empty
+        // get a related video if the queue is now empty
+        if (!currentEntry) {
+            // TODO: cap the number of related entries
+            addRelatedVideo(previousEntry).catch(err => {
+                console.error("There was an error adding a related video", err);
 
-        BUS.getInstance().emit(BUS.TOPICS.VIDEO_CHANGE, currentEntry, previousEntry);
+                // Send the playlist changed notification if we couldn't add a related video
+                BUS.getInstance().emit(BUS.TOPICS.VIDEO_CHANGE, currentEntry, previousEntry);
+            })
+        } else {
+            BUS.getInstance().emit(BUS.TOPICS.VIDEO_CHANGE, currentEntry, previousEntry);
+        }
     });
 }
 
@@ -41,6 +54,23 @@ function voteToSkip(user) {
     const pl = Playlist.getInstance();
 
     return pl.voteToSkip(user);
+}
+
+function addRelatedVideo(previousEntry) {
+    const pl = Playlist.getInstance();
+
+    const provider = findProvider(previousEntry.video.provider);
+
+    if (!provider) {
+        throw new Error("UnknownProvider");
+    }
+
+    return provider.related(previousEntry.video.id)
+        .then(addVideoToPlaylist(pl))
+}
+
+function findProvider(name) {
+    return PROVIDERS.find(provider => provider.NAME === name);
 }
 
 function randomVideo(message) {

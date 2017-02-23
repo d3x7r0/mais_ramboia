@@ -24,6 +24,7 @@ const DEFAULTS = {
         key: undefined
     },
     playlist: {
+        maxRelated: 10,
         minDuration: 0,
         votes: 5
     }
