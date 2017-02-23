@@ -94,7 +94,7 @@ function start(app, options) {
     controller.hears([/what[’|']?s playing\??/, /what is playing\??/, 'now playing'], ['direct_mention', 'direct_message'], function (bot, message) {
         let response = getNowPlayingMessage(
             message.user,
-            pl.getCurrent()
+            Behaviour.getCurrent()
         );
 
         bot.reply(message, response);
