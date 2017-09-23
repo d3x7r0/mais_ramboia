@@ -51,7 +51,6 @@
     "modernizr": "^3.5.0",
     "modernizr-loader": "^1.0.1",
     "normalize.css": "^7.0.0",
-    "npm-bower-sync-ver": "^1.0.8",
     "style-loader": "^0.18.2",
     "uglify-js": "^2.0.0",
     "webpack": "^3.0.0"
