@@ -7,7 +7,7 @@ import ExtractTextPlugin from "extract-text-webpack-plugin";
 import LessPluginAutoprefix from 'less-plugin-autoprefix';
 
 let entries = {
-    [pkg.name]: "./app/client/js/main.js"
+    [pkg.name]: resolve(__dirname, pkg.directories.client, 'js/main.js')
 };
 
 
@@ -56,7 +56,7 @@ function toDromedaryCase(str) {
 export default {
     entry: entries,
     output: {
-        path: resolve(__dirname, '_public'),
+        path: resolve(__dirname, pkg.directories.public),
         filename: '[name].js',
         library: {
             root: `${toDromedaryCase(pkg.name)}`,
@@ -149,7 +149,7 @@ export default {
         new HtmlWebpackPlugin({
             title: '+Ramboia',
             filename: 'index.html',
-            template: 'app/client/index.ejs',
+            template: resolve(__dirname, pkg.directories.client, 'index.ejs'),
             hash: true
         })
     ]
