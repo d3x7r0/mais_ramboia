@@ -1,17 +1,27 @@
 {
-  "env": {
-    "es6": true,
-    "node": true
-  },
   "extends": "eslint:recommended",
+  "env": {
+    "browser": true,
+    "es6": true
+  },
   "rules": {
-    "semi": [
+    "linebreak-style": [
       "warn",
-      "always"
+      "unix"
     ],
-    "no-console": 0,
     "no-unused-vars": [
-      "warn"
-    ]
+      "warn",
+      {
+        "args": "none"
+      }
+    ],
+    "no-console": "off"
+  },
+  "parserOptions": {
+    "sourceType": "module",
+    "ecmaFeatures": {
+      "jsx": true,
+      "experimentalObjectRestSpread": true
+    }
   }
 }

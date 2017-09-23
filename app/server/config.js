@@ -2,6 +2,7 @@
 'use strict';
 
 const rc = require('rc');
+const path = require('path');
 
 const DEFAULTS = {
     hostname: "0.0.0.0",
@@ -9,7 +10,7 @@ const DEFAULTS = {
     reverseProxyMode: false,
     url: undefined,
     dir: {
-        client: __dirname + '/../../_public'
+        client: path.resolve(__dirname, '../../_public')
     },
     slack: {
         token: undefined

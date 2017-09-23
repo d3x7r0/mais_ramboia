@@ -1,8 +1,14 @@
 'use strict';
 // Dependencies
+import Modernizr from 'modernizr';
+
+window.Modernizr = Modernizr;
+
 import DOM from "./utils/dom";
 import Player from "./widgets/player";
 import {fetchJSON} from "./utils/fetch";
+
+import '../less/app.less';
 
 let player;
 
@@ -30,7 +36,7 @@ function init() {
             socket.on('playlist_add', addVideo);
             socket.on('video_change', updateCurrentEntry);
 
-            socket.on('reconnect', synchronizeState)
+            socket.on('reconnect', synchronizeState);
         },
         err => console.error("Failed to load socket.io", err)
     );
@@ -154,3 +160,6 @@ export default {
     start: start,
     getPlayer: getPlayer
 };
+
+// Run
+start();

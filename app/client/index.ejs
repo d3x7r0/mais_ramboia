@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8"/>
+
+    <title><%= htmlWebpackPlugin.options.title || 'Webpack App'%></title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+</head>
+<body id="ramboia">
+    <header class="application-header">
+        <h1 class="application-title">+Ramboia</h1>
+    </header>
+
+    <main class="application">
+        <div class="video-container-wrapper">
+            <div class="video-container">
+                <div class="wrapper">
+                    <div id="player" class="video-player"></div>
+                </div>
+                <div class="video-player-controls">
+                    <button class="video-mute" id="video-mute">Mute</button>
+                    <p class="video-time">
+                        <span class="video-time-current" id="video-time-current">0:00</span>/<span class="video-time-total" id="video-time-total">0:00</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <ul class="playlist" id="playlist">
+            <!--
+            <li class="playlist-entry" title="Video Title (Requested by Username)">
+                <a href="http://youtube.com" target="_blank">
+                    <img class="playlist-entry-background" src="http://placehold.it/854x480"/>
+                    <h1 class="playlist-entry-title">Video Title</h1>
+                </a>
+            </li>
+            -->
+        </ul>
+    </main>
+</body>
+</html>

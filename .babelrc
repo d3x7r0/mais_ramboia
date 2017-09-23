@@ -1,13 +1,27 @@
 {
   "presets": [
     [
-      "es2015",
+      "env",
       {
-        "modules": false
+        "browsers": [
+          "> 1%",
+          "last 2 versions",
+          "Firefox ESR",
+          "Opera 12.1",
+          "ie >= 9"
+        ]
       }
     ]
   ],
   "plugins": [
-    "external-helpers"
+    "dynamic-import-webpack",
+    "transform-object-rest-spread",
+    [
+      "transform-react-jsx",
+      {
+        "pragma": "h"
+      }
+    ],
+    "transform-runtime"
   ]
 }

@@ -1,0 +1,13 @@
+{
+  "minify": true,
+  "options": [
+    "setClasses",
+    "addTest",
+    "html5printshiv",
+    "testProp",
+    "fnBind"
+  ],
+  "feature-detects": [
+
+  ]
+}
