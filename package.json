@@ -7,9 +7,9 @@
   "license": "MIT",
   "scripts": {
     "clean": "(cd _public; rm -rf assets *.html **/*.html css js)",
-    "test": "npm run-script test:eslint && npm run-script test:mocha",
+    "test": "npm run-script test:eslint",
     "test:eslint": "eslint src/js test/js",
-    "test:mocha": "mocha --recursive -r babel-polyfill -r jsdom-global/register --compilers js:babel-register -R ${MOCHA_REPORTER:-$npm_package_config_mocha_reporter} --reporter-options output=${JUNIT_REPORT_PATH:-$npm_package_config_mocha_report_path}",
+    "_disabled_test:mocha": "mocha --recursive -r babel-polyfill -r jsdom-global/register --compilers js:babel-register",
     "build": "webpack -p",
     "prepublish": "npm run-script build",
     "debug": "webpack --watch & npm run-script start",
