@@ -103,15 +103,9 @@ export default {
                             options: {
                                 sourceMap: true,
                                 plugins: [
-                                    new LessPluginAutoprefix({
-                                        "browsers": [
-                                            "> 1%",
-                                            "last 2 versions",
-                                            "Firefox ESR",
-                                            "Opera 12.1",
-                                            "ie >= 9"
-                                        ]
-                                    }) // FIXME: this is the same as the config in .babelrc
+                                    new LessPluginAutoprefix(
+                                        pkg.babel.presets[0][1] // FIXME: this is ugly
+                                    )
                                 ]
                             }
                         }

@@ -73,5 +73,59 @@
     "test-client": "test/client",
     "test-server": "test/server",
     "public": "_public"
+  },
+  "babel": {
+    "presets": [
+      [
+        "env",
+        {
+          "browsers": [
+            "> 1%",
+            "last 2 versions",
+            "Firefox ESR",
+            "Opera 12.1",
+            "ie >= 9"
+          ]
+        }
+      ]
+    ],
+    "plugins": [
+      "dynamic-import-webpack",
+      "transform-object-rest-spread",
+      [
+        "transform-react-jsx",
+        {
+          "pragma": "h"
+        }
+      ],
+      "transform-runtime"
+    ]
+  },
+  "eslintConfig": {
+    "extends": "eslint:recommended",
+    "env": {
+      "browser": true,
+      "es6": true
+    },
+    "rules": {
+      "linebreak-style": [
+        "warn",
+        "unix"
+      ],
+      "no-unused-vars": [
+        "warn",
+        {
+          "args": "none"
+        }
+      ],
+      "no-console": "off"
+    },
+    "parserOptions": {
+      "sourceType": "module",
+      "ecmaFeatures": {
+        "jsx": true,
+        "experimentalObjectRestSpread": true
+      }
+    }
   }
 }
